@@ -3,6 +3,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * A TCP/IP server that listens for connections on a specified port and handles each client connection in a separate
@@ -12,6 +13,8 @@ public class Server extends Thread {
 
     private final int port;
 
+    private int workload;
+
     /**
      * Constructs a new Server instance.
      *
@@ -19,6 +22,7 @@ public class Server extends Thread {
      */
     public Server ( int port ) {
         this.port = port;
+        this.workload = 0;
     }
 
     public int getPort() {
@@ -53,6 +57,18 @@ public class Server extends Thread {
                 new Thread ( new ClientHandler ( clientSocket ) ).start ( );
             }
         }
+    }
+
+    public int getWorkload() {
+        return workload;
+    }
+
+    public void incrementWorkload() {
+        workload++;
+    }
+
+    public void decrementWorkload() {
+        workload--;
     }
 
     /**
