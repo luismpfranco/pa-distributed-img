@@ -21,6 +21,10 @@ public class Server extends Thread {
         this.port = port;
     }
 
+    public int getPort() {
+        return port;
+    }
+
     /**
      * The entry point of the server thread. Starts the server to accept and handle client connections.
      */
