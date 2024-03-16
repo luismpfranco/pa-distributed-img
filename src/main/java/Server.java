@@ -18,16 +18,18 @@ public class Server extends Thread {
     private LoadInfo loadInfo;
 
     private int workload;
+    private final int maxWorkload;
 
     /**
      * Constructs a new Server instance.
      *
      * @param port The port number on which the server will listen for incoming connections.
      */
-    public Server ( int port, LoadInfo loadInfo ) {
+    public Server ( int port, LoadInfo loadInfo, int maxWorkload) {
         this.port = port;
         this.workload = 0;
         this.loadInfo = loadInfo;
+        this.maxWorkload = maxWorkload;
     }
 
     public int getPort() {
@@ -68,13 +70,17 @@ public class Server extends Thread {
         return workload;
     }
 
+    public int getMaxWorkload() {
+        return this.maxWorkload;
+    }
+
     public void incrementWorkload() {
-        workload++;
+        this.workload++;
         updateLoadInfo();
     }
 
     public void decrementWorkload() {
-        workload--;
+        this.workload--;
         updateLoadInfo();
     }
 
