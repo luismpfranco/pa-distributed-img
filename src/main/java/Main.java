@@ -34,12 +34,17 @@ public class Main {
         button.addActionListener(e -> {
             BufferedImage[][] subImages = ImageTransformer.splitImage(sampleImage, num_rows, num_columns);
             Client client = new Client("Client A");
-            Server server = servers.get(0); // Get the single server
+            int serverIndex = 0;
             for (int i = 0; i < num_rows; i++) {
                 for (int j = 0; j < num_columns; j++) {
+                    Server server = servers.get(serverIndex);
+                    server.incrementWorkload(); // Increment the workload of the server
                     Request request = new Request("greeting", "Hello, Server!", subImages[i][j]);
                     Response response = client.sendRequestAndReceiveResponse("localhost", server.getPort(), request);
                     subImages[i][j] = ImageTransformer.createImageFromBytes(response.getImageSection());
+                    server.decrementWorkload(); // Decrement the workload of the server
+
+                    serverIndex = (serverIndex + 1) % num_servers;
                 }
             }
             icon.setImage(ImageTransformer.joinImages(subImages, sampleImage.getWidth(), sampleImage.getHeight(), sampleImage.getType()));
@@ -51,5 +56,4 @@ public class Main {
         frame.pack ( );
         frame.setVisible ( true );
     }
-
 }
