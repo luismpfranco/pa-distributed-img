@@ -11,30 +11,29 @@ import java.io.IOException;
  */
 public class ImageTransformer {
 
-    /**
-     * Splits a given image in sub-images according to the number of rows and columns specified in the arguments.
+/**
+     * Splits a given image into a grid of sub-images.
      *
-     * @param image    the BufferedImage containing the image
-     * @param nRows    the number of rows to split the image
-     * @param nColumns the number of columns to split the image
+     * @param image     the BufferedImage containing the image
+     * @param nRows     the number of rows in the grid
+     * @param nColumns  the number of columns in the grid
      *
      * @return a BufferedImage array containing the sub-images
      */
-    public static BufferedImage[][] splitImage ( BufferedImage image , int nRows , int nColumns ) {
-        if ( ( image.getHeight ( ) % nRows != 0 ) || ( image.getWidth ( ) % nColumns != 0 ) ) {
-            throw new IllegalArgumentException ( "Invalid number of rows or columns" );
-        }
-        int subImageHeight = image.getHeight ( ) / nRows;
-        int subImageWidth = image.getWidth ( ) / nColumns;
-        BufferedImage[][] images = new BufferedImage[ nRows ][ nColumns ];
-        int column = 0;
-        for ( int i = 0 ; i < image.getWidth ( ) ; i += subImageWidth ) {
-            int row = 0;
-            for ( int j = 0 ; j < image.getHeight ( ) ; j += subImageHeight ) {
-                images[ row ][ column ] = image.getSubimage ( i , j , subImageWidth , subImageHeight );
-                row = row + 1;
+    public static BufferedImage[][] splitImage(BufferedImage image, int nRows, int nColumns) {
+        int height = (image.getHeight() / nRows) * nRows;
+        int width = (image.getWidth() / nColumns) * nColumns;
+
+        BufferedImage resizedImage = image.getSubimage(0, 0, width, height);
+
+        int subImageWidth = width / nColumns;
+        int subImageHeight = height / nRows;
+        BufferedImage[][] images = new BufferedImage[nRows][nColumns];
+
+        for (int i = 0; i < nRows; i++) {
+            for (int j = 0; j < nColumns; j++) {
+                images[i][j] = resizedImage.getSubimage(j * subImageWidth, i * subImageHeight, subImageWidth, subImageHeight);
             }
-            column = column + 1;
         }
         return images;
     }
