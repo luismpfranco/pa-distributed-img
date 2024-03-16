@@ -3,7 +3,9 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A TCP/IP server that listens for connections on a specified port and handles each client connection in a separate
@@ -13,6 +15,8 @@ public class Server extends Thread {
 
     private final int port;
 
+    private LoadInfo loadInfo;
+
     private int workload;
 
     /**
@@ -20,9 +24,10 @@ public class Server extends Thread {
      *
      * @param port The port number on which the server will listen for incoming connections.
      */
-    public Server ( int port ) {
+    public Server ( int port, LoadInfo loadInfo ) {
         this.port = port;
         this.workload = 0;
+        this.loadInfo = loadInfo;
     }
 
     public int getPort() {
@@ -65,10 +70,40 @@ public class Server extends Thread {
 
     public void incrementWorkload() {
         workload++;
+        updateLoadInfo();
     }
 
     public void decrementWorkload() {
         workload--;
+        updateLoadInfo();
+    }
+
+    private void updateLoadInfo() {
+        // Read the current load info from the file
+        Map<Integer, Integer> loadInfo = new HashMap<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("load.info"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(" ");
+                int port = Integer.parseInt(parts[0]);
+                int workload = Integer.parseInt(parts[1]);
+                loadInfo.put(port, workload);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Update the workload for this server
+        loadInfo.put(port, workload);
+
+        // Write the updated load info back to the file
+        try (PrintWriter writer = new PrintWriter(new FileWriter("load.info"))) {
+            for (Map.Entry<Integer, Integer> entry : loadInfo.entrySet()) {
+                writer.println(entry.getKey() + " " + entry.getValue());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
