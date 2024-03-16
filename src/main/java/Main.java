@@ -1,9 +1,12 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class Main {
-    public static void main ( String[] args ) {
+    public static void main ( String[] args ) throws IOException {
 
         LoadInfo loadInfo = new LoadInfo("load.info");
 
@@ -31,7 +34,12 @@ public class Main {
 
         Queue<ImagePart> waitingList = new LinkedList<>();
 
-        BufferedImage sampleImage = ImageReader.readImage("sample.png");
+        File image = new File("sample.png");
+        BufferedImage sampleImage = ImageIO.read(image);
+        String imageNameWithExtension = image.getName();
+        String imageNameWithoutExtension = imageNameWithExtension.substring(0, imageNameWithExtension.lastIndexOf('.'));
+        String imageExtension = imageNameWithExtension.substring(imageNameWithExtension.lastIndexOf(".") + 1);
+
         //Java Swing stuff
         JFrame frame = new JFrame("pa-distributed-img");
         frame.setSize(600, 600);
@@ -46,7 +54,7 @@ public class Main {
 
         button.addActionListener(e -> {
             BufferedImage[][] subImages = ImageTransformer.splitImage(sampleImage, num_rows, num_columns);
-            Client client = new Client("Client A",loadInfo,serverInfoMap);
+            Client client = new Client("Client A",loadInfo,serverInfoMap,num_rows,num_columns);
             int serverIndex = 0;
             int nextServerIndex = 0;
             for (int i = 0; i < num_rows; i++) {
@@ -69,11 +77,11 @@ public class Main {
                             server.decrementWorkload(); // Decrement the workload of the server
                             try {
                                 Thread.sleep(1000); // Wait for 1 second
-                            } catch (InterruptedException ex) {
-                                ex.printStackTrace();
+                            } catch (InterruptedException f) {
+                                f.printStackTrace();
                             }
 
-                            client.sendImagePart(subImages[i][j]);
+                            client.sendImagePart(subImages[i][j],imageNameWithoutExtension,imageExtension);
                             sent = true;
                         }
                         else
@@ -103,7 +111,7 @@ public class Main {
                                     } catch (InterruptedException ex) {
                                         ex.printStackTrace();
                                     }
-                                    client.sendImagePart(processedImage);
+                                    client.sendImagePart(processedImage, imageNameWithoutExtension, imageExtension);
 
                                     subImages[imagePart.getRow()][imagePart.getColumn()] = processedImage;
                                 }

@@ -19,15 +19,26 @@ public class Client {
 
     private final Map<String, ServerInfo> serverInfoMap;
 
+    private BufferedImage[][] processedImageParts;
+    private int currentRow = 0;
+    private int currentColumn = 0;
+
+    private int totalRows; // set this value when you know the number of rows
+    private int totalColumns; // set this value when you know the number of columns
+
+
     /**
      * Constructs a new client with the specified name.
      *
      * @param name The name of the client.
      */
-    public Client ( String name, LoadInfo loadInfo, Map<String, ServerInfo> serverInfoMap) {
+    public Client ( String name, LoadInfo loadInfo, Map<String, ServerInfo> serverInfoMap, int totalRows, int totalColumns ) {
         this.name = name;
         this.loadInfo = loadInfo;
         this.serverInfoMap = serverInfoMap;
+        this.totalRows = totalRows;
+        this.totalColumns = totalColumns;
+        this.processedImageParts = new BufferedImage[totalRows][totalColumns];
     }
 
     /**
@@ -77,7 +88,7 @@ public class Client {
     }
 
 
-    public void sendImagePart(BufferedImage imagePart) {
+    public void sendImagePart(BufferedImage imagePart, String originalName, String extension){
         String leastLoadedServerHost = loadInfo.getLeastLoadedServer();
         int port = Integer.parseInt(leastLoadedServerHost);
         String host = "localhost"; // Replace with "leastLoadedServerHost" if the server is running on a different machine
@@ -97,6 +108,22 @@ public class Client {
                     File outputfile = new File("results/" + filename);
                     ImageIO.write(image, "png", outputfile);
                     System.out.println("Received image saved as " + outputfile.getPath());
+
+                    // Add the processed image part to your array of processed image parts
+                    processedImageParts[currentRow][currentColumn] = image;
+
+                    // Update currentRow and currentColumn for the next image part
+                    currentColumn++;
+                    if (currentColumn == totalColumns) {
+                        currentColumn = 0;
+                        currentRow++;
+                    }
+
+                    // If all image parts have been processed and added to the array, reconstruct the image and save it
+                    if (currentRow == totalRows && currentColumn == 0) {
+                        BufferedImage reconstructedImage = ImageTransformer.reconstructImage(processedImageParts);
+                        ImageTransformer.saveEditedImage(reconstructedImage, originalName, extension);
+                    }
                 }
             } else {
                 System.out.println("No response received from the server.");

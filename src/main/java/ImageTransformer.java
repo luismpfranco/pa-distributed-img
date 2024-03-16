@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -112,5 +113,35 @@ public class ImageTransformer {
             throw new RuntimeException(e);
         }
         return baos.toByteArray();
+    }
+
+    public static BufferedImage reconstructImage(BufferedImage[][] imageParts) {
+        int partHeight = imageParts[0][0].getHeight();
+        int partWidth = imageParts[0][0].getWidth();
+        int totalHeight = partHeight * imageParts.length;
+        int totalWidth = partWidth * imageParts[0].length;
+
+        BufferedImage reconstructedImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics g = reconstructedImage.getGraphics();
+
+        for (int i = 0; i < imageParts.length; i++) {
+            for (int j = 0; j < imageParts[i].length; j++) {
+                g.drawImage(imageParts[i][j], j * partWidth, i * partHeight, null);
+            }
+        }
+
+        g.dispose();
+        return reconstructedImage;
+    }
+
+    public static void saveEditedImage(BufferedImage image, String originalName, String extension) {
+        try {
+            String editedName = originalName + "_edited." + extension;
+            File outputfile = new File("results/" + editedName);
+            ImageIO.write(image, extension, outputfile);
+            System.out.println("Edited image saved as " + outputfile.getPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

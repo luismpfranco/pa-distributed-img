@@ -76,40 +76,14 @@ public class Server extends Thread {
 
     public void incrementWorkload() {
         this.workload++;
-        updateLoadInfo();
+        this.loadInfo.updateLoad(String.valueOf(this.port), this.workload);
+        System.out.println("The server " + this.port + " has a workload of " + this.workload);
     }
 
     public void decrementWorkload() {
         this.workload--;
-        updateLoadInfo();
-    }
-
-    private void updateLoadInfo() {
-        // Read the current load info from the file
-        Map<Integer, Integer> loadInfo = new HashMap<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("load.info"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(" ");
-                int port = Integer.parseInt(parts[0]);
-                int workload = Integer.parseInt(parts[1]);
-                loadInfo.put(port, workload);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Update the workload for this server
-        loadInfo.put(port, workload);
-
-        // Write the updated load info back to the file
-        try (PrintWriter writer = new PrintWriter(new FileWriter("load.info"))) {
-            for (Map.Entry<Integer, Integer> entry : loadInfo.entrySet()) {
-                writer.println(entry.getKey() + " " + entry.getValue());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.loadInfo.updateLoad(String.valueOf(this.port), this.workload);
+        System.out.println("The server " + this.port + " has a workload of " + this.workload);
     }
 
     /**
