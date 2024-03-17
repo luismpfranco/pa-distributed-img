@@ -2,8 +2,8 @@ import java.awt.image.BufferedImage;
 
 public class ImagePart {
     private BufferedImage image;
-    private int row;
-    private int column;
+    private final int row;
+    private final int column;
 
     public ImagePart(BufferedImage image, int row, int column) {
         this.image = image;
@@ -21,5 +21,9 @@ public class ImagePart {
 
     public int getColumn() {
         return column;
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
     }
 }

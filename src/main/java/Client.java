@@ -5,7 +5,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 
 /**
  * A simple TCP/IP client that connects to a server, sends an object, and receives a response.
@@ -15,16 +14,14 @@ public class Client {
     // The name of the client
     private final String name;
 
-    private  LoadInfo loadInfo;
+    private final LoadInfo loadInfo;
 
-    private final Map<String, ServerInfo> serverInfoMap;
-
-    private BufferedImage[][] processedImageParts;
+    private final BufferedImage[][] processedImageParts;
     private int currentRow = 0;
     private int currentColumn = 0;
 
-    private int totalRows; // set this value when you know the number of rows
-    private int totalColumns; // set this value when you know the number of columns
+    private final int totalRows;
+    private final int totalColumns;
 
 
     /**
@@ -32,10 +29,9 @@ public class Client {
      *
      * @param name The name of the client.
      */
-    public Client ( String name, LoadInfo loadInfo, Map<String, ServerInfo> serverInfoMap, int totalRows, int totalColumns ) {
+    public Client ( String name, LoadInfo loadInfo, int totalRows, int totalColumns ) {
         this.name = name;
         this.loadInfo = loadInfo;
-        this.serverInfoMap = serverInfoMap;
         this.totalRows = totalRows;
         this.totalColumns = totalColumns;
         this.processedImageParts = new BufferedImage[totalRows][totalColumns];
@@ -77,16 +73,6 @@ public class Client {
         // Return null or consider a better error handling/return strategy
         return null;
     }
-
-    /**
-     * Returns the name of the client.
-     *
-     * @return The name of the client.
-     */
-    public String getName ( ) {
-        return name;
-    }
-
 
     public void sendImagePart(BufferedImage imagePart, String originalName, String extension){
         String leastLoadedServerHost = loadInfo.getLeastLoadedServer();
