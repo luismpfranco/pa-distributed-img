@@ -119,4 +119,19 @@ public class Client {
         }
     }
 
+    public BufferedImage[][] getProcessedImageParts() {
+        return processedImageParts;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getTotalRows() {
+        return totalRows;
+    }
+
+    public int getTotalColumns() {
+        return totalColumns;
+    }
 }

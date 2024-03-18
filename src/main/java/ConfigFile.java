@@ -13,6 +13,7 @@ public class ConfigFile extends Properties {
             this.configFileProperties.load(reader);
         } catch (Exception e) {
             e.printStackTrace();
+            this.configFileProperties = null;
         }
     }
 

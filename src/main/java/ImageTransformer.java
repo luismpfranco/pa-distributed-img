@@ -49,8 +49,9 @@ public class ImageTransformer {
     public static BufferedImage removeReds ( BufferedImage image ) {
         int width = image.getWidth ( );
         int height = image.getHeight ( );
+        int type = image.getType ( );
         Color c;
-        BufferedImage resultingImage = new BufferedImage ( width , height , BufferedImage.TYPE_INT_RGB );
+        BufferedImage resultingImage = new BufferedImage ( width , height , type );
         for ( int i = 0 ; i < width ; i++ ) {
             for ( int j = 0 ; j < height ; j++ ) {
                 c = new Color ( image.getRGB ( i , j ) );
@@ -61,6 +62,7 @@ public class ImageTransformer {
         }
         return resultingImage;
     }
+
 
     /**
      * Joins a given array of BufferedImage in one final image. This method should be called after splitting the images
