@@ -32,4 +32,12 @@ public class UserInterface extends JPanel {
         this.add(selectImageButton);
         this.add(new JScrollPane(messageArea));
     }
+
+    public JButton getSelectImageButton() {
+        return selectImageButton;
+    }
+
+    public JTextArea getMessageArea() {
+        return messageArea;
+    }
 }
