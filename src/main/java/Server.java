@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * A TCP/IP server that listens for connections on a specified port and handles each client connection in a separate
@@ -57,14 +59,21 @@ public class Server extends Thread {
     private void startServer ( ) throws IOException {
         try ( ServerSocket serverSocket = new ServerSocket ( port ) ) {
             System.out.println ( "Server started on port " + port );
+
+            // Create a thread pool with a fixed number of threads.
+            ExecutorService executorService = Executors.newFixedThreadPool(10);
+
             while ( true ) {
                 Socket clientSocket = serverSocket.accept ( );
-                // Create and start a new thread for each connected client.
-                // TODO: Fix this for better resource management.
-                new Thread ( new ClientHandler ( clientSocket ) ).start ( );
+
+                // Submit a new task to the thread pool for each connected client.
+                executorService.submit(new ClientHandler(clientSocket));
             }
         }
     }
+
+    /*
+    * */
 
     public int getWorkload() {
         return workload;
@@ -144,10 +153,9 @@ public class Server extends Thread {
          *
          * @return The response object to be sent back to the client.
          */
-        private Response handleRequest ( Request request ) {
-            // TODO: Implement actual request handling logic here.
+        private Response handleRequest(Request request) {
             BufferedImage editedImage = ImageTransformer.removeReds(ImageTransformer.createImageFromBytes(request.getImageSection()));
-            return new Response ( "OK" , "Hello, Client!" ,editedImage);
+            return new Response("OK", "Hello, Client!", editedImage);
         }
     }
 
