@@ -25,11 +25,16 @@ public class SequentialExecutor {
         Client client = new Client("Client A", new LoadInfo("load.info"), nRows, nCols);
         Request request = new Request("greeting", "Hello, Server!", imagePart.getImage());
         Response response = client.sendRequestAndReceiveResponse("localhost", server.getPort(), request);
-        BufferedImage imageWithoutRed = removeRed(ImageTransformer.createImageFromBytes(response.getImageSection()));
-        imagePart.setImage(imageWithoutRed);
+
+        if(response != null){
+            BufferedImage imageWithoutRed = removeRed(ImageTransformer.createImageFromBytes(response.getImageSection()));
+            imagePart.setImage(imageWithoutRed);
+        }else{
+            System.out.println("Error: The server did not respond or the request failde.");
+        }
     }
 
-    private BufferedImage removeRed(BufferedImage image) {
+    public BufferedImage removeRed(BufferedImage image) {
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
                 Color color = new Color(image.getRGB(x, y));

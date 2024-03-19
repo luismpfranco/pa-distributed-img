@@ -1,39 +1,41 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.lang.reflect.Field;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
-public class ServerTest implements Runnable {
+import static org.junit.jupiter.api.Assertions.*;
 
-    private ServerSocket serverSocket;
+public class ServerTest {
 
-    public ServerTest(int port) throws IOException {
-        serverSocket = new ServerSocket(port);
+    private Server server;
+    private LoadInfo loadInfo;
+
+    @BeforeEach
+    public void setup() {
+        loadInfo = new LoadInfo("test_load.info");
+        server = new Server(8080, loadInfo, 100);
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            try (Socket socket = serverSocket.accept();
-                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
+    @Test
+    public void testGetPort() {
+        assertEquals(8080, server.getPort());
+    }
 
-                // Read the request from the client
-                Request request = (Request) in.readObject();
+    @Test
+    public void testWorkloadManagement() {
+        assertEquals(0, server.getWorkload());
+        assertEquals(100, server.getMaxWorkload());
 
-                BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        server.incrementWorkload();
+        assertEquals(1, server.getWorkload());
 
-                // Create a response
-                Response response = new Response("Success", "Request processed successfully", image);
-
-                // Send the response to the client
-                out.writeObject(response);
-
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+        server.decrementWorkload();
+        assertEquals(0, server.getWorkload());
     }
 }

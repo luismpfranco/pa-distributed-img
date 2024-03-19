@@ -20,7 +20,7 @@ public class LoadInfo {
         return  Collections.min(loadMap.entrySet(), Map.Entry.comparingByValue()).getKey();
     }
 
-    private Map<String, Integer> readLoadInfo() {
+    public Map<String, Integer> readLoadInfo() {
         Map<String, Integer> loadMap = new HashMap<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -34,7 +34,7 @@ public class LoadInfo {
         return loadMap;
     }
 
-    private void writeLoadInfo(Map<String, Integer> loadMap) {
+    public void writeLoadInfo(Map<String, Integer> loadMap) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             for (Map.Entry<String, Integer> entry : loadMap.entrySet()) {
                 writer.println(entry.getKey() + " " + entry.getValue());

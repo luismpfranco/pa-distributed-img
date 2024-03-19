@@ -15,13 +15,14 @@ public class ClientTest {
     private static Client client;
     private static BufferedImage image;
     private static LoadInfo loadInfo;
-
     private static String host;
+    private static int port = 8888;
+    private static Request request;
 
     @BeforeAll
     public static void setup() throws IOException {
         // Start the server in a new thread
-        serverThread = new Thread(new ServerTest(8888));
+        serverThread = new Thread(new ServerSocketTest(port));
         serverThread.start();
 
         // Create a new client
@@ -32,18 +33,12 @@ public class ClientTest {
         loadInfo = new LoadInfo("load.info");
 
         host = "localhost";
+
+        request = new Request("Test", "This is a test request", image);
     }
 
     @Test
     public void testSendRequestAndReceiveResponse() {
-
-        // Define the host and port
-        String host = "localhost";
-        int port = 8888;
-
-        // Create a request
-        Request request = new Request("Test", "This is a test request", image);
-
         // Send the request and receive the response
         Response response = client.sendRequestAndReceiveResponse(host, port, request);
 
@@ -89,30 +84,21 @@ public class ClientTest {
 
     @Test
     void testSendRequestAndReceiveResponseWithInvalidHost() {
-        Client client = new Client("TestClient", new LoadInfo("load.info"), 1, 1);
-        BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        Request request = new Request("Test", "This is a test request", image);
-
         // Test with an invalid host
-        Response response = client.sendRequestAndReceiveResponse("invalid_host", 8888, request);
+        Client clientInvalid = new Client("TestClient", new LoadInfo("load.info"), 1, 1);
+        Response response = clientInvalid.sendRequestAndReceiveResponse("invalid_host", 8888, request);
         assertNull(response, "Response should be null when an UnknownHostException is thrown");
     }
 
     @Test
     void testSendRequestAndReceiveResponseWithInvalidPort() {
-        Client client = new Client("TestClient", new LoadInfo("load.info"), 1, 1);
-        BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        Request request = new Request("Test", "This is a test request", image);
-
         // Test with an invalid port
-        Response response = client.sendRequestAndReceiveResponse("localhost",8888 , request);
-        assertNull(null, "Response should be null when an IOException is thrown");
+        Response response = client.sendRequestAndReceiveResponse("localhost",8000, request);
+        assertNull(response, "Response should be null when an IOException is thrown");
     }
 
     @Test
     void testSendImagePartWithNullImage() {
-        Client client = new Client("TestClient", new LoadInfo("load.info"), 1, 1);
-
         // Test with a null image
         assertThrows(RuntimeException.class, () -> client.sendImagePart(null, "sample", "png"), "A RuntimeException should be thrown when an IOException is thrown");
     }

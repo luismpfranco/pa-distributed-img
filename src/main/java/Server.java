@@ -92,6 +92,8 @@ public class Server extends Thread {
     private static class ClientHandler implements Runnable {
 
         private final Socket clientSocket;
+        private ObjectOutputStream out;
+        private ObjectInputStream in;
 
         /**
          * Constructs a new ClientHandler instance.
@@ -108,8 +110,9 @@ public class Server extends Thread {
          */
         @Override
         public void run ( ) {
-            try ( ObjectOutputStream out = new ObjectOutputStream ( clientSocket.getOutputStream ( ) ) ;
-                  ObjectInputStream in = new ObjectInputStream ( clientSocket.getInputStream ( ) ) ) {
+            try {
+                this.out = new ObjectOutputStream ( clientSocket.getOutputStream ( ) ) ;
+                this.in = new ObjectInputStream ( clientSocket.getInputStream ( ) );
 
                 Request request;
                 // Continuously read objects sent by the client and respond to each.

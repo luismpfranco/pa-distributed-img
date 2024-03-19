@@ -15,8 +15,10 @@ public class SIMDExecutor {
         this.image = image;
         this.nCols = nCols;
         this.nRows = nRows;
-        this.splitImages = new BufferedImage[nRows][nCols];
+        this.splitImages = ImageTransformer.splitImage(image,nRows,nCols);
     }
+
+    /*
     public void execute(int i, int j){
         splitImages = ImageTransformer.splitImage(image,nRows,nCols);
 
@@ -56,6 +58,22 @@ public class SIMDExecutor {
         // Update the image with the processed pixels
         splitImages[i][j].setRGB(0, 0, subImageWidth, subImageHeight, pixels, 0, subImageWidth);
     }
+    */
+
+    public void execute(int i, int j){
+        int subImageWidth = splitImages[i][j].getWidth();
+        int subImageHeight = splitImages[i][j].getHeight();
+
+        Color c;
+        for (int x = 0; x < subImageWidth; x++) {
+            for (int y = 0; y < subImageHeight; y++) {
+                c = new Color(splitImages[i][j].getRGB(x, y));
+                int g = c.getGreen();
+                int b = c.getBlue();
+                splitImages[i][j].setRGB(x, y, new Color(0, g, b).getRGB());
+            }
+        }
+    }
 
     public void processAllSubImages() {
         for (int i = 0; i < nRows; i++) {
@@ -81,4 +99,17 @@ public class SIMDExecutor {
     public BufferedImage getSplitImages(int i, int j) {
         return splitImages[i][j];
     }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public int getnCols() {
+        return nCols;
+    }
+
+    public int getnRows() {
+        return nRows;
+    }
 }
+
