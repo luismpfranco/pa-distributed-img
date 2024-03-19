@@ -3,8 +3,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * A simple TCP/IP client that connects to a server, sends an object, and receives a response.
@@ -74,7 +72,7 @@ public class Client {
         return null;
     }
 
-    public void sendImagePart(BufferedImage imagePart, String originalName, String extension){
+    public void sendImagePart(BufferedImage imagePart, String name, String extension){
         String leastLoadedServerHost = loadInfo.getLeastLoadedServer();
         int port = Integer.parseInt(leastLoadedServerHost);
         String host = "localhost"; // Replace with "leastLoadedServerHost" if the server is running on a different machine
@@ -90,26 +88,21 @@ public class Client {
                     byte[] receivedImage = response.getImageSection();
                     BufferedImage image = ImageIO.read(new ByteArrayInputStream(receivedImage));
                     // Process the received image...
-                    String filename = "received_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".png";
-                    File outputfile = new File("results/" + filename);
+                    File outputfile = new File("results/" + name +  "." + extension);
                     ImageIO.write(image, "png", outputfile);
                     System.out.println("Received image saved as " + outputfile.getPath());
 
-                    // Add the processed image part to your array of processed image parts
-                    processedImageParts[currentRow][currentColumn] = image;
+                    if (currentRow < totalRows && currentColumn < totalColumns) {
+                        processedImageParts[currentRow][currentColumn] = image;
 
-                    // Update currentRow and currentColumn for the next image part
-                    currentColumn++;
-                    if (currentColumn == totalColumns) {
-                        currentColumn = 0;
-                        currentRow++;
+                        // Update currentRow and currentColumn for the next image part
+                        currentColumn++;
+                        if (currentColumn == totalColumns) {
+                            currentColumn = 0;
+                            currentRow++;
+                        }
                     }
 
-                    // If all image parts have been processed and added to the array, reconstruct the image and save it
-                    if (currentRow == totalRows && currentColumn == 0) {
-                        BufferedImage reconstructedImage = ImageTransformer.reconstructImage(processedImageParts);
-                        ImageTransformer.saveEditedImage(reconstructedImage, originalName, extension);
-                    }
                 }
             } else {
                 System.out.println("No response received from the server.");
