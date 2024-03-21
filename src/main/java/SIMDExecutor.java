@@ -18,48 +18,6 @@ public class SIMDExecutor {
         this.splitImages = ImageTransformer.splitImage(image,nRows,nCols);
     }
 
-    /*
-    public void execute(int i, int j){
-        splitImages = ImageTransformer.splitImage(image,nRows,nCols);
-
-        int subImageWidth = splitImages[i][j].getWidth();
-        int subImageHeight = splitImages[i][j].getHeight();
-
-        final int[] pixels = splitImages[i][j].getRGB(0, 0, subImageWidth, subImageHeight, null, 0, subImageWidth);
-
-        Thread[] threads = new Thread[pixels.length];
-        lock.lock(); // Lock before starting the threads
-        try {
-            for (int id = 0; id < pixels.length; id++) {
-                final int index = id;
-                threads[id] = new Thread(() -> {
-                    int rgb = pixels[index];
-                    int green = (rgb >> 8) & 0xFF;
-                    int blue = rgb & 0xFF;
-
-                    // Pack the pixels back into the array
-                    pixels[index] = (0) | (green << 8) | blue;
-                });
-                threads[id].start();
-            }
-
-            // Wait for all threads to finish
-            for (Thread thread : threads) {
-                try {
-                    thread.join();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        } finally {
-            lock.unlock(); // Unlock after all threads have finished
-        }
-
-        // Update the image with the processed pixels
-        splitImages[i][j].setRGB(0, 0, subImageWidth, subImageHeight, pixels, 0, subImageWidth);
-    }
-    */
-
     public void execute(int i, int j){
         int subImageWidth = splitImages[i][j].getWidth();
         int subImageHeight = splitImages[i][j].getHeight();
