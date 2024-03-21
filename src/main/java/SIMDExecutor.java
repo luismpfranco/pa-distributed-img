@@ -1,14 +1,12 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class SIMDExecutor {
     private final BufferedImage image;
     private final int nCols;
     private final int nRows;
     private BufferedImage[][] splitImages;
-    private final ReentrantLock lock = new ReentrantLock();
     private final Semaphore semaphore = new Semaphore(10); // Limit to 10 sub-images being processed at a time
 
     public SIMDExecutor(BufferedImage image, int nCols, int nRows) {
