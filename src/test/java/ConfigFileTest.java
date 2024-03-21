@@ -7,11 +7,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * The ConfigFileTest class implements tests for the ConfigFile class.
+ */
 public class ConfigFileTest {
-
+    /**
+     * The configuration file.
+     */
     private ConfigFile configFile;
+    /**
+     * The test file.
+     */
     private File testFile;
+
+    /**
+     * Setup before each test.
+     *
+     * @throws IOException if an I/O error occurs
+     */
 
     @BeforeEach
     public void setup() throws IOException {
@@ -25,6 +38,9 @@ public class ConfigFileTest {
         configFile = new ConfigFile(testFile.getPath());
     }
 
+    /**
+     * Cleanup after each test.
+     */
     @Test
     public void testGetIntProperty() {
         // Read an integer property
@@ -34,6 +50,9 @@ public class ConfigFileTest {
         assertEquals(123, value);
     }
 
+    /**
+     * Cleanup after each test.
+     */
     @Test
     public void testConstructor() {
         // Assert that the properties are loaded correctly
@@ -41,6 +60,9 @@ public class ConfigFileTest {
         assertEquals("123", configFile.configFileProperties.getProperty("testIntProperty"));
     }
 
+    /**
+     * Cleanup after each test.
+     */
     @Test
     public void testConstructor_FileNotFoundException() {
         // Try to load a non-existent configuration file

@@ -3,11 +3,32 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the load information of servers.
+ */
+
 public class LoadInfo {
+    /**
+     * The filename of the load information.
+     */
     private final String filename;
+
+    /**
+     * Constructs a new load information with the specified filename.
+     *
+     * @param filename The filename to use.
+     */
+
     public LoadInfo(String filename) {
         this.filename = filename;
     }
+
+    /**
+     * Updates the load of the specified server.
+     *
+     * @param serverId The server ID to update.
+     * @param load     The load to update.
+     */
 
     public synchronized void updateLoad(String serverId, int load) {
         Map<String, Integer> loadMap = readLoadInfo();
@@ -15,10 +36,22 @@ public class LoadInfo {
         writeLoadInfo(loadMap);
     }
 
+    /**
+     * Gets the least loaded server.
+     *
+     * @return The least loaded server.
+     */
+
     public synchronized String getLeastLoadedServer(){
         Map<String, Integer> loadMap = readLoadInfo();
         return  Collections.min(loadMap.entrySet(), Map.Entry.comparingByValue()).getKey();
     }
+
+    /**
+     * Reads the load information from the file.
+     *
+     * @return The load information read from the file.
+     */
 
     public Map<String, Integer> readLoadInfo() {
         Map<String, Integer> loadMap = new HashMap<>();
@@ -33,6 +66,12 @@ public class LoadInfo {
         }
         return loadMap;
     }
+
+    /**
+     * Writes the load information to the file.
+     *
+     * @param loadMap The load information to write.
+     */
 
     public void writeLoadInfo(Map<String, Integer> loadMap) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {

@@ -7,9 +7,16 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * The ImageTransformerTest class implements tests for the ImageTransformer class.
+ */
 public class ImageTransformerTest {
 
+    /**
+     * Test the splitImage method.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testSplitImage() throws IOException {
         BufferedImage image = ImageIO.read(new File("sample.png"));
@@ -19,6 +26,11 @@ public class ImageTransformerTest {
         assertEquals(2, splitImages[0].length);
     }
 
+    /**
+     * Test the removeReds method.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testRemoveReds() throws IOException {
         BufferedImage image = ImageIO.read(new File("sample.png"));
@@ -27,6 +39,11 @@ public class ImageTransformerTest {
         assertNotNull(noRedsImage);
     }
 
+    /**
+     * Test the joinImages method.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testJoinImages() throws IOException {
         BufferedImage image = ImageIO.read(new File("sample.png"));
@@ -36,6 +53,11 @@ public class ImageTransformerTest {
         assertNotNull(joinedImage);
     }
 
+    /**
+     * Test the createImageFromBytes method.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testCreateImageFromBytes() throws IOException {
         BufferedImage image = ImageIO.read(new File("sample.png"));
@@ -48,6 +70,11 @@ public class ImageTransformerTest {
         assertNotNull(imageFromBytes);
     }
 
+    /**
+     * Test the createBytesFromImage method.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testCreateBytesFromImage() throws IOException {
         BufferedImage image = ImageIO.read(new File("sample.png"));
@@ -56,6 +83,11 @@ public class ImageTransformerTest {
         assertNotNull(bytes);
     }
 
+    /**
+     * Test the reconstructImage method.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testReconstructImage() throws IOException {
         BufferedImage image = ImageIO.read(new File("sample.png"));
@@ -65,6 +97,11 @@ public class ImageTransformerTest {
         assertNotNull(reconstructedImage);
     }
 
+    /**
+     * Test the saveEditedImage method.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testSaveEditedImage() throws IOException {
         BufferedImage image = ImageIO.read(new File("sample.png"));

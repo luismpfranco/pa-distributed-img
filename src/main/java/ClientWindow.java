@@ -4,14 +4,39 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
 import javax.imageio.ImageIO;
-
+/**
+ * A simple GUI window for the client.
+ */
 public class ClientWindow extends JFrame {
+    /**
+     * The file chooser.
+     */
     private final JFileChooser fileChooser;
+    /**
+     * The image label.
+     */
     private final JLabel imageLabel;
+    /**
+     * The remove reds button.
+     */
     private final JButton removeRedsButton;
+    /**
+     * The file name without the extension.
+     */
     private String fileNameWithoutExtension;
+    /**
+     * The file extension.
+     */
     private String fileExtension;
 
+    /**
+     * Constructs a new client window with the specified image processor, servers, client, and SIMD executor.
+     *
+     * @param imageProcessor The image processor to use.
+     * @param servers        The list of servers to use.
+     * @param client         The client to use.
+     * @param simdExecutor   The SIMD executor to use.
+     */
     public ClientWindow(ImageProcessor imageProcessor, List<Server> servers, Client client, SIMDExecutor simdExecutor) {
 
         JButton selectImageButton = new JButton("Select Image");
@@ -60,6 +85,12 @@ public class ClientWindow extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Updates the image in the window.
+     *
+     * @param image The new image to display.
+     */
+
     public void updateImage(BufferedImage image) {
         SwingUtilities.invokeLater(() -> {
             ImageIcon imageIcon = new ImageIcon(image);
@@ -67,10 +98,21 @@ public class ClientWindow extends JFrame {
             pack();
         });
     }
+
+    /**
+     * Returns the file name without the extension.
+     *
+     * @return The file name without the extension.
+     */
     public String getFileNameWithoutExtension() {
         return fileNameWithoutExtension;
     }
 
+    /**
+     * Returns the file extension.
+     *
+     * @return The file extension.
+     */
     public String getFileExtension() {
         return fileExtension;
     }

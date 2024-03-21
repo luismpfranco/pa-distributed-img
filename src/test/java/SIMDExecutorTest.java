@@ -7,11 +7,18 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * The SIMDExecutorTest class implements tests for the SIMDExecutor class.
+ */
 public class SIMDExecutorTest {
-
+    /**
+     * The image.
+     */
     private static BufferedImage image;
 
+    /**
+     * Setup before all tests.
+     */
     static {
         try {
             image = ImageIO.read(new File("sample.png"));
@@ -20,6 +27,11 @@ public class SIMDExecutorTest {
         }
     }
 
+    /**
+     * Test the constructor.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testConstructor() throws IOException {
         int nRows = 2;
@@ -31,6 +43,11 @@ public class SIMDExecutorTest {
         assertEquals(nCols, simdExecutor.getnCols());
     }
 
+    /**
+     * Test the execute method.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testExecuteMethod() throws IOException {
         int nRows = 2;
@@ -57,6 +74,11 @@ public class SIMDExecutorTest {
         }
     }
 
+    /**
+     * Test the getSplitImages method.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testGetSplitImagesMethod() throws IOException {
         int nRows = 2;

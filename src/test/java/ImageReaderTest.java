@@ -7,9 +7,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * The ImageReaderTest class implements tests for the ImageReader class.
+ */
 public class ImageReaderTest {
 
+    /**
+     * Test the readImage method.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     @Test
     public void testReadImage() throws IOException {
         // Create a test image file
@@ -27,6 +34,9 @@ public class ImageReaderTest {
         Files.delete(testImageFile.toPath());
     }
 
+    /**
+     * Test the readImage method with a non-existent file.
+     */
     @Test
     public void testReadImage_FileNotFoundException() {
         // Try to read a non-existent image file

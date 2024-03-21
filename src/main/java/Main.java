@@ -4,15 +4,40 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
+/**
+ * The Main class is the entry point of the application.
+ */
 public class Main {
+    /**
+     * The name of the image to process.
+     */
     private static final String IMAGE_NAME = "sample.png";
-
+    /**
+     * The configuration file to use.
+     */
     private static final ConfigFile CONFIG_FILE = new ConfigFile ( "project.config" );
+    /**
+     * The number of rows to use.
+     */
     private static final int NUM_ROWS = CONFIG_FILE.getIntProperty ( "num_rows" );
+    /**
+     * The number of columns to use.
+     */
     private static final int NUM_COLUMNS = CONFIG_FILE.getIntProperty ( "num_columns" );
+    /**
+     * The number of servers to use.
+     */
     private static final int NUM_SERVERS = CONFIG_FILE.getIntProperty ( "num_servers" );
+    /**
+     * The maximum workload to use.
+     */
     private static final int MAX_WORKLOAD = CONFIG_FILE.getIntProperty ( "max_workload" );
+
+    /**
+     * The main method of the application.
+     *
+     * @param args The command line arguments.
+     */
 
     public static void main ( String[] args ) {
 
@@ -61,6 +86,12 @@ public class Main {
         frame.setLocationRelativeTo(null);
     }
 
+    /**
+     * Initializes the server info map.
+     *
+     * @return The server info map.
+     */
+
     private static Map<String, ServerInfo> initializaServerInfoMap() {
         Map<String, ServerInfo> serverInfoMap = new HashMap<>();
         for (int i = 0; i < NUM_SERVERS; i++) {
@@ -70,6 +101,15 @@ public class Main {
         }
         return serverInfoMap;
     }
+
+    /**
+     * Starts the servers.
+     *
+     * @param loadInfo     The load info to use.
+     * @param serverInfoMap The server info map to use.
+     *
+     * @return The list of servers.
+     */
 
     private static List<Server> startServers(LoadInfo loadInfo, Map<String, ServerInfo> serverInfoMap) {
         List<Server> servers = new ArrayList<>();

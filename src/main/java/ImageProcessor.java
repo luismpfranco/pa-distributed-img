@@ -5,16 +5,48 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
+/**
+ * A class that processes images.
+ */
 
 public class ImageProcessor {
+    /**
+     * The blocking queue to store image parts that are waiting to be processed.
+     */
     private final BlockingQueue<ImagePart> waitingList = new LinkedBlockingQueue<>();
+    /**
+     * The semaphore to control the number of servers that can process images concurrently.
+     */
     private final Semaphore semaphore;
+    /**
+     * The client window to use.
+     */
     private final ClientWindow clientWindow;
+
+    /**
+     * Constructs a new image processor with the specified number of servers and client window.
+     *
+     * @param numServers   The number of servers to use.
+     * @param clientWindow The client window to use.
+     */
 
     public ImageProcessor(int numServers, ClientWindow clientWindow) {
         this.semaphore = new Semaphore(numServers);
         this.clientWindow = clientWindow;
     }
+
+    /**
+     * Processes an image using the specified servers, client, SIMD executor, file name without extension, and file extension.
+     *
+     * @param image                   The image to process.
+     * @param servers                 The list of servers to use.
+     * @param client                  The client to use.
+     * @param simdExecutor            The SIMD executor to use.
+     * @param fileNameWithoutExtension The file name without extension to use.
+     * @param fileExtension            The file extension to use.
+     *
+     * @return The processed image.
+     */
 
     public BufferedImage processImage(BufferedImage image, List<Server> servers, Client client, SIMDExecutor simdExecutor, String fileNameWithoutExtension, String fileExtension) {
         final int NUM_ROWS = simdExecutor.getnRows();
@@ -64,6 +96,17 @@ public class ImageProcessor {
         return editedImage;
     }
 
+    /**
+     * Processes a sub-image using the specified sub-images, row, column, servers, client, and SIMD executor.
+     *
+     * @param subImages     The sub-images to process.
+     * @param i             The row of the sub-image.
+     * @param j             The column of the sub-image.
+     * @param servers       The list of servers to use.
+     * @param client        The client to use.
+     * @param simdExecutor  The SIMD executor to use.
+     */
+
     private void processSubImage(BufferedImage[][] subImages, int i, int j, List<Server> servers, Client client, SIMDExecutor simdExecutor){
         boolean sent = false;
         while (!sent) {
@@ -98,6 +141,15 @@ public class ImageProcessor {
         }
     }
 
+    /**
+     * Processes the waiting list using the specified sub-images, servers, SIMD executor, and client.
+     *
+     * @param subImages     The sub-images to process.
+     * @param servers       The list of servers to use.
+     * @param simdExecutor  The SIMD executor to use.
+     * @param client        The client to use.
+     */
+
     private void processWaitingList(BufferedImage[][] subImages, List<Server> servers, SIMDExecutor simdExecutor, Client client) {
         new Thread(() -> {
             while (true) {
@@ -131,6 +183,17 @@ public class ImageProcessor {
             }
         }).start();
     }
+
+    /**
+     * Processes an image part using the specified sub-images, row, column, client, SIMD executor, and server.
+     *
+     * @param subImages     The sub-images to process.
+     * @param i             The row of the sub-image.
+     * @param j             The column of the sub-image.
+     * @param client        The client to use.
+     * @param simdExecutor  The SIMD executor to use.
+     * @param server        The server to use.
+     */
 
     private void processImagePart(BufferedImage[][] subImages, int i, int j, Client client, SIMDExecutor simdExecutor, Server server) throws InterruptedException {
 

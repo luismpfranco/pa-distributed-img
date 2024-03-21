@@ -4,12 +4,22 @@ import org.junit.jupiter.api.Test;
 import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * The ImagePartsTest class implements tests for the ImageParts class.
+ */
 public class ImagePartsTest {
-
+    /**
+     * The image part.
+     */
     private ImagePart imagePart;
+    /**
+     * The image.
+     */
     private BufferedImage image;
 
+    /**
+     * Setup before each test.
+     */
     @BeforeEach
     public void setup() {
         // Create a new image
@@ -19,6 +29,9 @@ public class ImagePartsTest {
         imagePart = new ImagePart(image, 0, 0);
     }
 
+    /**
+     * Test the constructor.
+     */
     @Test
     public void testConstructor() {
         // Assert that the properties are set correctly
@@ -27,24 +40,36 @@ public class ImagePartsTest {
         assertEquals(0, imagePart.getColumn());
     }
 
+    /**
+     * Test the getImage method.
+     */
     @Test
     public void testGetImage() {
         // Assert that the correct image is returned
         assertEquals(image, imagePart.getImage());
     }
 
+    /**
+     * Test the getRow method.
+     */
     @Test
     public void testGetRow() {
         // Assert that the correct row is returned
         assertEquals(0, imagePart.getRow());
     }
 
+    /**
+     * Test the getColumn method.
+     */
     @Test
     public void testGetColumn() {
         // Assert that the correct column is returned
         assertEquals(0, imagePart.getColumn());
     }
 
+    /**
+     * Test the setRow method.
+     */
     @Test
     public void testSetImage() {
         // Create a new image

@@ -8,16 +8,44 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * The ClientTest class implements tests for the Client class.
+ */
 public class ClientTest {
-
+    /**
+     * The server thread.
+     */
     private static Thread serverThread;
+    /**
+     * The client.
+     */
     private static Client client;
+    /**
+     * The image.
+     */
     private static BufferedImage image;
+    /**
+     * The load information.
+     */
     private static LoadInfo loadInfo;
+    /**
+     * The host.
+     */
     private static String host;
+    /**
+     * The port.
+     */
     private static int port = 8888;
+    /**
+     * The request.
+     */
     private static Request request;
+
+    /**
+     * Setup before all tests.
+     *
+     * @throws IOException if an I/O error occurs
+     */
 
     @BeforeAll
     public static void setup() throws IOException {
@@ -37,6 +65,9 @@ public class ClientTest {
         request = new Request("Test", "This is a test request", image);
     }
 
+    /**
+     * Tear down after all tests.
+     */
     @Test
     public void testSendRequestAndReceiveResponse() {
         // Send the request and receive the response
@@ -52,6 +83,9 @@ public class ClientTest {
         assertEquals("Request processed successfully", response.getMessage());
     }
 
+    /**
+     * Tear down after all tests.
+     */
     @Test
     public void testSendImagePart() {
         // Send the image part
@@ -75,6 +109,9 @@ public class ClientTest {
         assertEquals(processedImage.getColorModel(), clientResultColor);
     }
 
+    /**
+     * Tear down after all tests.
+     */
     @Test
     public void testGetters(){
         assertEquals("TestClient", client.getName());
@@ -82,6 +119,9 @@ public class ClientTest {
         assertEquals(1, client.getTotalColumns());
     }
 
+    /**
+     * Tear down after all tests.
+     */
     @Test
     void testSendRequestAndReceiveResponseWithInvalidHost() {
         // Test with an invalid host
@@ -90,6 +130,9 @@ public class ClientTest {
         assertNull(response, "Response should be null when an UnknownHostException is thrown");
     }
 
+    /**
+     * Tear down after all tests.
+     */
     @Test
     void testSendRequestAndReceiveResponseWithInvalidPort() {
         // Test with an invalid port
@@ -97,6 +140,9 @@ public class ClientTest {
         assertNull(response, "Response should be null when an IOException is thrown");
     }
 
+    /**
+     * Tear down after all tests.
+     */
     @Test
     void testSendImagePartWithNullImage() {
         // Test with a null image

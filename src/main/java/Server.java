@@ -10,18 +10,29 @@ import java.util.concurrent.Executors;
  * thread.
  */
 public class Server extends Thread {
-
+    /**
+     * The port number on which the server will listen for incoming connections.
+     */
     private final int port;
-
+    /**
+     * The load information.
+     */
     private LoadInfo loadInfo;
-
+    /**
+     * The workload of the server.
+     */
     private int workload;
+    /**
+     * The maximum workload of the server.
+     */
     private final int maxWorkload;
 
     /**
-     * Constructs a new Server instance.
+     * Constructs a new server with the specified port number, load information, and maximum workload.
      *
-     * @param port The port number on which the server will listen for incoming connections.
+     * @param port       The port number on which the server will listen for incoming connections.
+     * @param loadInfo   The load information.
+     * @param maxWorkload The maximum workload of the server.
      */
     public Server ( int port, LoadInfo loadInfo, int maxWorkload) {
         this.port = port;
@@ -30,6 +41,11 @@ public class Server extends Thread {
         this.maxWorkload = maxWorkload;
     }
 
+    /**
+     * Gets the port number on which the server will listen for incoming connections.
+     *
+     * @return The port number on which the server will listen for incoming connections.
+     */
     public int getPort() {
         return port;
     }
@@ -68,20 +84,37 @@ public class Server extends Thread {
         }
     }
 
+    /**
+     * Gets the workload of the server.
+     *
+     * @return The workload of the server.
+     */
+
     public int getWorkload() {
         return workload;
     }
 
+    /**
+     * Gets the maximum workload of the server.
+     *
+     * @return The maximum workload of the server.
+     */
     public int getMaxWorkload() {
         return this.maxWorkload;
     }
 
+    /**
+     * Increments the workload of the server.
+     */
     public void incrementWorkload() {
         this.workload++;
         this.loadInfo.updateLoad(String.valueOf(this.port), this.workload);
         System.out.println("The server " + this.port + " has a workload of " + this.workload);
     }
 
+    /**
+     * Decrements the workload of the server.
+     */
     public void decrementWorkload() {
         this.workload--;
         this.loadInfo.updateLoad(String.valueOf(this.port), this.workload);
@@ -92,9 +125,17 @@ public class Server extends Thread {
      * Handles client connections. Reads objects from the client, processes them, and sends a response back.
      */
     private static class ClientHandler implements Runnable {
-
+        /**
+         * The client socket.
+         */
         private final Socket clientSocket;
+        /**
+         * The output stream to send objects to the client.
+         */
         private ObjectOutputStream out;
+        /**
+         * The input stream to read objects from the client.
+         */
         private ObjectInputStream in;
 
         /**

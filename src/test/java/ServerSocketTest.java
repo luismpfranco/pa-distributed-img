@@ -4,15 +4,27 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+/**
+ * The ServerSocketTest class implements a server socket for testing purposes.
+ */
 public class ServerSocketTest implements Runnable {
-
+    /**
+     * The server socket.
+     */
     private ServerSocket serverSocket;
-
+    /**
+     * Constructs a new ServerSocketTest.
+     *
+     * @param port the port
+     * @throws IOException if an I/O error occurs
+     */
     public ServerSocketTest(int port) throws IOException {
         serverSocket = new ServerSocket(port);
     }
 
+    /**
+     * Runs the server socket.
+     */
     @Override
     public void run() {
         while (true) {

@@ -9,16 +9,33 @@ import java.net.UnknownHostException;
  */
 public class Client {
 
-    // The name of the client
+    /**
+     * The name of the client.
+     */
     private final String name;
-
+    /**
+     * The load information.
+     */
     private final LoadInfo loadInfo;
-
+    /**
+     * The processed image parts.
+     */
     private final BufferedImage[][] processedImageParts;
+    /**
+     * The current row.
+     */
     private int currentRow = 0;
+    /**
+     * The current column.
+     */
     private int currentColumn = 0;
-
+    /**
+     * The total number of rows.
+     */
     private final int totalRows;
+    /**
+     * The total number of columns.
+     */
     private final int totalColumns;
 
 
@@ -72,6 +89,12 @@ public class Client {
         return null;
     }
 
+    /**
+     * Sends an image part to the server and waits for a response.
+     *
+     * @param imagePart The image part to send to the server.
+     */
+
     public void sendImagePart(BufferedImage imagePart, String name, String extension){
         String leastLoadedServerHost = loadInfo.getLeastLoadedServer();
         int port = Integer.parseInt(leastLoadedServerHost);
@@ -112,18 +135,39 @@ public class Client {
         }
     }
 
+    /**
+     * Returns the processed image parts.
+     *
+     * @return The processed image parts.
+     */
     public BufferedImage[][] getProcessedImageParts() {
         return processedImageParts;
     }
+    /**
+     * Returns the name of the client.
+     *
+     * @return The name of the client.
+     */
 
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the total number of rows.
+     *
+     * @return The total number of rows.
+     */
+
     public int getTotalRows() {
         return totalRows;
     }
 
+    /**
+     * Returns the total number of columns.
+     *
+     * @return The total number of columns.
+     */
     public int getTotalColumns() {
         return totalColumns;
     }

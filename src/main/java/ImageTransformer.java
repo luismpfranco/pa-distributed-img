@@ -117,6 +117,14 @@ public class ImageTransformer {
         return baos.toByteArray();
     }
 
+    /**
+     * Reconstructs an image from an array of BufferedImages.
+     *
+     * @param imageParts the array of BufferedImages
+     *
+     * @return the reconstructed image
+     */
+
     public static BufferedImage reconstructImage(BufferedImage[][] imageParts) {
         int partHeight = imageParts[0][0].getHeight();
         int partWidth = imageParts[0][0].getWidth();
@@ -135,6 +143,14 @@ public class ImageTransformer {
         g.dispose();
         return reconstructedImage;
     }
+
+    /**
+     * Saves an edited image to the results folder.
+     *
+     * @param image the edited image
+     * @param originalName the original name of the image
+     * @param extension the extension of the image
+     */
 
     public static void saveEditedImage(BufferedImage image, String originalName, String extension) {
         try {

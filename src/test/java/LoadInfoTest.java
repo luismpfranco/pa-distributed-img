@@ -7,11 +7,18 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * The LoadInfoTest class implements tests for the LoadInfo class.
+ */
 public class LoadInfoTest {
-
+    /**
+     * The load information.
+     */
     private LoadInfo loadInfo;
 
+    /**
+     * Setup before each test.
+     */
     @BeforeEach
     public void setup() {
         loadInfo = new LoadInfo("test_load.info");
@@ -24,6 +31,9 @@ public class LoadInfoTest {
         }
     }
 
+    /**
+     * Cleanup after each test.
+     */
     @Test
     public void testUpdateLoad() {
         loadInfo.updateLoad("server1", 15);
@@ -31,12 +41,18 @@ public class LoadInfoTest {
         assertEquals(15, loadMap.get("server1"));
     }
 
+    /**
+     * Cleanup after each test.
+     */
     @Test
     public void testGetLeastLoadedServer() {
         String leastLoadedServer = loadInfo.getLeastLoadedServer();
         assertEquals("server1", leastLoadedServer);
     }
 
+    /**
+     * Cleanup after each test.
+     */
     @Test
     public void testReadLoadInfo() {
         Map<String, Integer> loadMap = loadInfo.readLoadInfo();
@@ -45,6 +61,9 @@ public class LoadInfoTest {
         assertEquals(30, loadMap.get("server3"));
     }
 
+    /**
+     * Cleanup after each test.
+     */
     @Test
     public void testWriteLoadInfo() {
         Map<String, Integer> newLoadMap = Map.of("server1", 15, "server2", 25, "server3", 35);
