@@ -2,6 +2,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -26,6 +28,10 @@ public class Server extends Thread {
      * The maximum workload of the server.
      */
     private final int maxWorkload;
+    /**
+     * The list of client handlers.
+     */
+    private static List<ClientHandler> clientHandlers;
 
     /**
      * Constructs a new server with the specified port number, load information, and maximum workload.
@@ -71,15 +77,16 @@ public class Server extends Thread {
     private void startServer ( ) throws IOException {
         try ( ServerSocket serverSocket = new ServerSocket ( port ) ) {
             System.out.println ( "Server started on port " + port );
-
+            clientHandlers = new ArrayList<>( );
             // Create a thread pool with a fixed number of threads.
             ExecutorService executorService = Executors.newFixedThreadPool(10);
 
             while ( true ) {
                 Socket clientSocket = serverSocket.accept ( );
+                ClientHandler handler = new ClientHandler(clientSocket);
+                clientHandlers.add(handler);
 
-                // Submit a new task to the thread pool for each connected client.
-                executorService.submit(new ClientHandler(clientSocket));
+                executorService.submit(handler);
             }
         }
     }
@@ -121,6 +128,10 @@ public class Server extends Thread {
         System.out.println("The server " + this.port + " has a workload of " + this.workload);
     }
 
+    public void setWorkload(int i) {
+        this.workload = i;
+    }
+
     /**
      * Handles client connections. Reads objects from the client, processes them, and sends a response back.
      */
@@ -151,6 +162,7 @@ public class Server extends Thread {
          * The entry point of the client handler thread. Manages input and output streams for communication with the
          * client.
          */
+
         @Override
         public void run ( ) {
             try {

@@ -96,13 +96,13 @@ public class ImageConsumerTask implements Runnable {
      * @param server       The server to use.
      */
 
-    private void processImagePart(ImagePart imagePart, Client client, SIMDExecutor simdExecutor, Server server) {
+    public void processImagePart(ImagePart imagePart, Client client, SIMDExecutor simdExecutor, Server server) {
         simdExecutor.execute(imagePart.getRow(), imagePart.getColumn());
         Request request = new Request("greeting", "Hello, Server!", imagePart.getImage());
         Response response = client.sendRequestAndReceiveResponse("localhost", server.getPort(), request);
         BufferedImage processedSubImage = ImageTransformer.createImageFromBytes(response.getImageSection());
         imagePart.setImage(processedSubImage);
         clientWindow.updateImage(processedSubImage);
-        client.sendImagePart(processedSubImage, fileNameWithoutExtension + "_edited_" + imagePart.getRow() + "_" + imagePart.getColumn(), fileExtension);
+        client.sendImagePart(processedSubImage, fileNameWithoutExtension + "_edited", fileExtension);
     }
 }

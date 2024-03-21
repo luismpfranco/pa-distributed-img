@@ -29,7 +29,13 @@ public class ClientWindow extends JFrame {
      */
     private String fileExtension;
 
+    /**
+     * The image processor.
+     */
     private ImageProcessor imageProcessor;
+    /**
+     * The icon.
+     */
     private ImageIcon icon;
 
     /**
@@ -128,19 +134,39 @@ public class ClientWindow extends JFrame {
     public JLabel getImageLabel() {
         return imageLabel;
     }
-
+    /**
+     * Sets the image processor.
+     *
+     * @param imageProcessor The image processor to use.
+     */
     public void setImageProcessor(ImageProcessor imageProcessor) {
         this.imageProcessor = imageProcessor;
     }
+
+    /**
+     * Sets the file extension.
+     *
+     * @param png The file extension to use.
+     */
 
     public void setFileExtension(String png) {
         this.fileExtension = png;
     }
 
+    /**
+     * Sets the file name without the extension.
+     *
+     * @param fileNameWithoutExtension The file name without the extension to use.
+     */
     public void setFileNameWithoutExtension(String fileNameWithoutExtension) {
         this.fileNameWithoutExtension = fileNameWithoutExtension;
     }
 
+    /**
+     * Returns the icon.
+     *
+     * @return The icon.
+     */
     public ImageIcon getImageIcon() {
         return icon;
     }

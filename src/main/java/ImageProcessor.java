@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -21,7 +22,7 @@ public class ImageProcessor {
     /**
      * The client window to use.
      */
-    private final ClientWindow clientWindow;
+    private ClientWindow clientWindow;
 
     /**
      * Constructs a new image processor with the specified number of servers and client window.
@@ -107,7 +108,7 @@ public class ImageProcessor {
      * @param simdExecutor  The SIMD executor to use.
      */
 
-    private void processSubImage(BufferedImage[][] subImages, int i, int j, List<Server> servers, Client client, SIMDExecutor simdExecutor){
+    void processSubImage(BufferedImage[][] subImages, int i, int j, List<Server> servers, Client client, SIMDExecutor simdExecutor){
         boolean sent = false;
         while (!sent) {
             Server server = servers.stream().min(Comparator.comparingInt(Server::getWorkload)).orElse(null);
@@ -150,7 +151,7 @@ public class ImageProcessor {
      * @param client        The client to use.
      */
 
-    private void processWaitingList(BufferedImage[][] subImages, List<Server> servers, SIMDExecutor simdExecutor, Client client) {
+    void processWaitingList(BufferedImage[][] subImages, List<Server> servers, SIMDExecutor simdExecutor, Client client) {
         new Thread(() -> {
             while (true) {
                 try {
@@ -195,7 +196,7 @@ public class ImageProcessor {
      * @param server        The server to use.
      */
 
-    private void processImagePart(BufferedImage[][] subImages, int i, int j, Client client, SIMDExecutor simdExecutor, Server server) throws InterruptedException {
+    void processImagePart(BufferedImage[][] subImages, int i, int j, Client client, SIMDExecutor simdExecutor, Server server) throws InterruptedException {
 
         simdExecutor.execute(i, j);
 
@@ -204,5 +205,23 @@ public class ImageProcessor {
         BufferedImage processedSubImage = ImageTransformer.createImageFromBytes(response.getImageSection());
 
         subImages[i][j] = processedSubImage;
+    }
+
+    /**
+     * Sets the client window to use.
+     *
+     * @param clientWindow The client window to set.
+     */
+    public void setClientWindow(ClientWindow clientWindow) {
+        this.clientWindow = clientWindow;
+    }
+
+    /**
+     * Gets the waiting list.
+     *
+     * @return The waiting list.
+     */
+    public BlockingQueue getWaitingList() {
+        return waitingList;
     }
 }

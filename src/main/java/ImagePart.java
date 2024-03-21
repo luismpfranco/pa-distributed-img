@@ -16,15 +16,18 @@ public class ImagePart {
      * The column of this image part.
      */
     private final int column;
-
+    /**
+     * The SIMD executor to use.
+     */
     private SIMDExecutor simdExecutor;
 
     /**
-     * Constructs a new image part with the specified image, row, and column.
+     * Constructs a new ImagePart with the specified image, row, column, and SIMD executor.
      *
-     * @param image  The image to use.
-     * @param row    The row to use.
-     * @param column The column to use.
+     * @param image        The image of this image part.
+     * @param row          The row of this image part.
+     * @param column       The column of this image part.
+     * @param simdExecutor The SIMD executor to use.
      */
     public ImagePart(BufferedImage image, int row, int column, SIMDExecutor simdExecutor) {
         this.image = image;
@@ -73,6 +76,11 @@ public class ImagePart {
         this.image = image;
     }
 
+    /**
+     * Gets the SIMD executor of this image part.
+     *
+     * @return The SIMD executor of this image part.
+     */
     public SIMDExecutor getSimdExecutor() {
         return simdExecutor;
     }

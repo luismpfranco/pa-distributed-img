@@ -16,6 +16,9 @@ public class ImagePartsTest {
      * The image.
      */
     private BufferedImage image;
+    /**
+     * The SIMD executor.
+     */
     private SIMDExecutor simdExecutor;
 
     /**

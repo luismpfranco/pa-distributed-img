@@ -71,7 +71,7 @@ public class ImageProducer implements Runnable {
      * @return True if a server is available, false otherwise.
      */
 
-    private boolean isServerAvailable() {
+    boolean isServerAvailable() {
         for (Server server : servers) {
             if (server.getWorkload() < server.getMaxWorkload() && server.getWorkload() > 0){
                 return true;
