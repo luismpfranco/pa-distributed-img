@@ -1,11 +1,7 @@
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -71,9 +67,6 @@ public class Server extends Thread {
             }
         }
     }
-
-    /*
-    * */
 
     public int getWorkload() {
         return workload;
