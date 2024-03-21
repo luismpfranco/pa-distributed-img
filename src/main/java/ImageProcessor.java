@@ -132,7 +132,7 @@ public class ImageProcessor {
             if (!sent) {
                 System.out.println("All servers are busy. Adding image part to waiting list.");
                 try {
-                    waitingList.put(new ImagePart(subImages[i][j], i, j));
+                    waitingList.put(new ImagePart(subImages[i][j], i, j, simdExecutor));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }

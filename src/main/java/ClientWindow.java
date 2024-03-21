@@ -29,6 +29,9 @@ public class ClientWindow extends JFrame {
      */
     private String fileExtension;
 
+    private ImageProcessor imageProcessor;
+    private ImageIcon icon;
+
     /**
      * Constructs a new client window with the specified image processor, servers, client, and SIMD executor.
      *
@@ -39,6 +42,7 @@ public class ClientWindow extends JFrame {
      */
     public ClientWindow(ImageProcessor imageProcessor, List<Server> servers, Client client, SIMDExecutor simdExecutor) {
 
+        this.imageProcessor = imageProcessor;
         JButton selectImageButton = new JButton("Select Image");
         fileChooser = new JFileChooser();
 
@@ -65,16 +69,17 @@ public class ClientWindow extends JFrame {
                 this.fileExtension = selectedFileName.substring(selectedFileName.lastIndexOf(".") + 1);
                 removeRedsButton.setVisible(true);
                 selectImageButton.setText("Select Another Image");
+                pack();
             }
         });
 
         removeRedsButton.addActionListener(e->{
-            ImageIcon imageIcon = (ImageIcon) imageLabel.getIcon();
-            BufferedImage image = (BufferedImage) imageIcon.getImage();
+            icon = (ImageIcon) imageLabel.getIcon();
+            BufferedImage image = (BufferedImage) icon.getImage();
 
             BufferedImage editedImage = imageProcessor.processImage(image, servers, client, simdExecutor, fileNameWithoutExtension, fileExtension);
             updateImage(editedImage);
-            imageIcon.setImage(editedImage);
+            icon.setImage(editedImage);
             imageLabel.repaint();
         });
 
@@ -92,11 +97,9 @@ public class ClientWindow extends JFrame {
      */
 
     public void updateImage(BufferedImage image) {
-        SwingUtilities.invokeLater(() -> {
-            ImageIcon imageIcon = new ImageIcon(image);
-            imageLabel.setIcon(imageIcon);
-            pack();
-        });
+        icon = new ImageIcon(image);
+        imageLabel.setIcon(icon);
+        pack();
     }
 
     /**
@@ -115,5 +118,30 @@ public class ClientWindow extends JFrame {
      */
     public String getFileExtension() {
         return fileExtension;
+    }
+
+    /**
+     * Returns the image label.
+     *
+     * @return The image label.
+     */
+    public JLabel getImageLabel() {
+        return imageLabel;
+    }
+
+    public void setImageProcessor(ImageProcessor imageProcessor) {
+        this.imageProcessor = imageProcessor;
+    }
+
+    public void setFileExtension(String png) {
+        this.fileExtension = png;
+    }
+
+    public void setFileNameWithoutExtension(String fileNameWithoutExtension) {
+        this.fileNameWithoutExtension = fileNameWithoutExtension;
+    }
+
+    public ImageIcon getImageIcon() {
+        return icon;
     }
 }

@@ -17,6 +17,8 @@ public class ImagePart {
      */
     private final int column;
 
+    private SIMDExecutor simdExecutor;
+
     /**
      * Constructs a new image part with the specified image, row, and column.
      *
@@ -24,10 +26,11 @@ public class ImagePart {
      * @param row    The row to use.
      * @param column The column to use.
      */
-    public ImagePart(BufferedImage image, int row, int column) {
+    public ImagePart(BufferedImage image, int row, int column, SIMDExecutor simdExecutor) {
         this.image = image;
         this.row = row;
         this.column = column;
+        this.simdExecutor = simdExecutor;
     }
 
     /**
@@ -68,5 +71,9 @@ public class ImagePart {
 
     public void setImage(BufferedImage image) {
         this.image = image;
+    }
+
+    public SIMDExecutor getSimdExecutor() {
+        return simdExecutor;
     }
 }

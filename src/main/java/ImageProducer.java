@@ -56,7 +56,7 @@ public class ImageProducer implements Runnable {
             for (int j = 0; j < nCols; j++) {
                 try {
                     if (isServerAvailable()) {
-                        queue.put(new ImagePart(subImages[i][j], i, j));
+                        queue.put(new ImagePart(subImages[i][j], i, j,new SIMDExecutor(subImages[i][j], nCols, nRows)));
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();

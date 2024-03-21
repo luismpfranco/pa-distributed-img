@@ -16,6 +16,7 @@ public class ImagePartsTest {
      * The image.
      */
     private BufferedImage image;
+    private SIMDExecutor simdExecutor;
 
     /**
      * Setup before each test.
@@ -26,7 +27,7 @@ public class ImagePartsTest {
         image = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
 
         // Create a new ImagePart object
-        imagePart = new ImagePart(image, 0, 0);
+        imagePart = new ImagePart(image, 0, 0,simdExecutor);
     }
 
     /**
