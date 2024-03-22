@@ -59,6 +59,7 @@ class ClientWindowTest {
      */
     @BeforeEach
     void setUp() {
+        servers.add(new Server(8808, loadInfo, 5));
         client = new Client(name,loadInfo,nRows,nCols);
         image = ImageReader.readImage("sample.png");
         simdExecutor = new SIMDExecutor(image,nCols,nRows);
