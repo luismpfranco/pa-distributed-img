@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Client.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">first-project</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Client.java</span></div><h1>Client.java</h1><pre class="source lang-java linenums">import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+/**
+ * A simple TCP/IP client that connects to a server, sends an object, and receives a response.
+ */
+public class Client {
+
+    /**
+     * The name of the client.
+     */
+    private final String name;
+    /**
+     * The load information.
+     */
+    private final LoadInfo loadInfo;
+    /**
+     * The processed image parts.
+     */
+    private final BufferedImage[][] processedImageParts;
+    /**
+     * The current row.
+     */
+<span class="fc" id="L27">    private int currentRow = 0;</span>
+    /**
+     * The current column.
+     */
+<span class="fc" id="L31">    private int currentColumn = 0;</span>
+    /**
+     * The total number of rows.
+     */
+    private final int totalRows;
+    /**
+     * The total number of columns.
+     */
+    private final int totalColumns;
+
+
+    /**
+     * Constructs a new client with the specified name.
+     *
+     * @param name The name of the client.
+     */
+<span class="fc" id="L47">    public Client ( String name, LoadInfo loadInfo, int totalRows, int totalColumns ) {</span>
+<span class="fc" id="L48">        this.name = name;</span>
+<span class="fc" id="L49">        this.loadInfo = loadInfo;</span>
+<span class="fc" id="L50">        this.totalRows = totalRows;</span>
+<span class="fc" id="L51">        this.totalColumns = totalColumns;</span>
+<span class="fc" id="L52">        this.processedImageParts = new BufferedImage[totalRows][totalColumns];</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * Sends an object to a specified server and waits for a response.
+     *
+     * @param host    The hostname or IP address of the server.
+     * @param port    The port number of the server.
+     * @param request The request object to send to the server.
+     *
+     * @return The response object from the server, or null in case of an error.
+     */
+    public Response sendRequestAndReceiveResponse ( String host , int port , Request request ) {
+<span class="fc" id="L65">        try ( Socket socket = new Socket ( host , port ) ) {</span>
+
+            // Create and initialize the streams for sending and receiving objects
+<span class="fc" id="L68">            ObjectOutputStream out = new ObjectOutputStream ( socket.getOutputStream ( ) );</span>
+<span class="fc" id="L69">            ObjectInputStream in = new ObjectInputStream ( socket.getInputStream ( ) );</span>
+
+            // Send the request to the server
+<span class="fc" id="L72">            System.out.println ( &quot;Connecting to server at &quot; + host + &quot;:&quot; + port );</span>
+<span class="fc" id="L73">            System.out.println ( &quot;Sending: &quot; + request );</span>
+<span class="fc" id="L74">            out.writeObject ( request );</span>
+
+            // Wait for and return the response from the server
+<span class="fc" id="L77">            Response response = ( Response ) in.readObject ( );</span>
+<span class="fc" id="L78">            System.out.println ( &quot;Received: &quot; + response );</span>
+<span class="fc" id="L79">            return response;</span>
+
+<span class="fc" id="L81">        } catch ( UnknownHostException e ) {</span>
+<span class="fc" id="L82">            System.err.println ( &quot;Server not found: &quot; + e.getMessage ( ) );</span>
+<span class="fc" id="L83">        } catch ( IOException e ) {</span>
+<span class="fc" id="L84">            System.err.println ( &quot;I/O Error: &quot; + e.getMessage ( ) );</span>
+<span class="nc" id="L85">        } catch ( ClassNotFoundException e ) {</span>
+<span class="nc" id="L86">            System.err.println ( &quot;Class not found: &quot; + e.getMessage ( ) );</span>
+<span class="fc" id="L87">        }</span>
+        // Return null or consider a better error handling/return strategy
+<span class="fc" id="L89">        return null;</span>
+    }
+
+    /**
+     * Sends an image part to the server and waits for a response.
+     *
+     * @param imagePart The image part to send to the server.
+     */
+
+    public void sendImagePart(BufferedImage imagePart, String name, String extension){
+<span class="fc" id="L99">        String leastLoadedServerHost = loadInfo.getLeastLoadedServer();</span>
+<span class="fc" id="L100">        int port = Integer.parseInt(leastLoadedServerHost);</span>
+<span class="fc" id="L101">        String host = &quot;localhost&quot;; // Replace with &quot;leastLoadedServerHost&quot; if the server is running on a different machine</span>
+<span class="fc" id="L102">        Request request = new Request(&quot;imagePart&quot;, &quot;Sending image part&quot;, imagePart);</span>
+        try {
+<span class="fc" id="L104">            Response response = sendRequestAndReceiveResponse(host, port, request);</span>
+            // Handle the response here
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            if (response != null) {</span>
+<span class="fc" id="L107">                System.out.println(&quot;Response status: &quot; + response.getStatus());</span>
+<span class="fc" id="L108">                System.out.println(&quot;Response message: &quot; + response.getMessage());</span>
+                // If the response contains an image, you can process it here
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">                if (response.getImageSection() != null) {</span>
+<span class="fc" id="L111">                    byte[] receivedImage = response.getImageSection();</span>
+<span class="fc" id="L112">                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(receivedImage));</span>
+                    // Process the received image...
+<span class="fc" id="L114">                    File outputfile = new File(&quot;results/&quot; + name +  &quot;.&quot; + extension);</span>
+<span class="fc" id="L115">                    ImageIO.write(image, &quot;png&quot;, outputfile);</span>
+<span class="fc" id="L116">                    System.out.println(&quot;Received image saved as &quot; + outputfile.getPath());</span>
+
+<span class="pc bpc" id="L118" title="2 of 4 branches missed.">                    if (currentRow &lt; totalRows &amp;&amp; currentColumn &lt; totalColumns) {</span>
+<span class="fc" id="L119">                        processedImageParts[currentRow][currentColumn] = image;</span>
+
+                        // Update currentRow and currentColumn for the next image part
+<span class="fc" id="L122">                        currentColumn++;</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">                        if (currentColumn == totalColumns) {</span>
+<span class="fc" id="L124">                            currentColumn = 0;</span>
+<span class="fc" id="L125">                            currentRow++;</span>
+                        }
+                    }
+
+<span class="fc" id="L129">                }</span>
+            } else {
+<span class="nc" id="L131">                System.out.println(&quot;No response received from the server.&quot;);</span>
+            }
+<span class="nc" id="L133">        } catch (IOException e) {</span>
+<span class="nc" id="L134">            e.printStackTrace();</span>
+<span class="fc" id="L135">        }</span>
+<span class="fc" id="L136">    }</span>
+
+    /**
+     * Returns the processed image parts.
+     *
+     * @return The processed image parts.
+     */
+    public BufferedImage[][] getProcessedImageParts() {
+<span class="fc" id="L144">        return processedImageParts;</span>
+    }
+    /**
+     * Returns the name of the client.
+     *
+     * @return The name of the client.
+     */
+
+    public String getName() {
+<span class="fc" id="L153">        return name;</span>
+    }
+
+    /**
+     * Returns the total number of rows.
+     *
+     * @return The total number of rows.
+     */
+
+    public int getTotalRows() {
+<span class="fc" id="L163">        return totalRows;</span>
+    }
+
+    /**
+     * Returns the total number of columns.
+     *
+     * @return The total number of columns.
+     */
+    public int getTotalColumns() {
+<span class="fc" id="L172">        return totalColumns;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

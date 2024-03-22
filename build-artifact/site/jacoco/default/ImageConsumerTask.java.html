@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImageConsumerTask.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">first-project</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">ImageConsumerTask.java</span></div><h1>ImageConsumerTask.java</h1><pre class="source lang-java linenums">import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+
+/**
+ * A task that consumes image parts from a blocking queue and processes them.
+ */
+
+public class ImageConsumerTask implements Runnable {
+    /**
+     * The blocking queue to consume image parts from.
+     */
+    private final BlockingQueue&lt;ImagePart&gt; queue;
+    /**
+     * The list of servers to use.
+     */
+    private final List&lt;Server&gt; servers;
+    /**
+     * The SIMD executor to use.
+     */
+    private final SIMDExecutor simdExecutor;
+    /**
+     * The client to use.
+     */
+    private final Client client;
+    /**
+     * The file name without extension to use.
+     */
+    private final String fileNameWithoutExtension;
+    /**
+     * The file extension to use.
+     */
+    private final String fileExtension;
+    /**
+     * The client window to use.
+     */
+    private final ClientWindow clientWindow;
+
+    /**
+     * Constructs a new image consumer task with the specified queue, servers, SIMD executor, client, file name without extension, file extension, and client window.
+     *
+     * @param queue                   The blocking queue to consume image parts from.
+     * @param servers                 The list of servers to use.
+     * @param simdExecutor            The SIMD executor to use.
+     * @param client                  The client to use.
+     * @param fileNameWithoutExtension The file name without extension to use.
+     * @param fileExtension            The file extension to use.
+     * @param clientWindow            The client window to use.
+     */
+
+<span class="nc" id="L51">    public ImageConsumerTask(BlockingQueue&lt;ImagePart&gt; queue, List&lt;Server&gt; servers, SIMDExecutor simdExecutor, Client client, String fileNameWithoutExtension, String fileExtension, ClientWindow clientWindow) {</span>
+<span class="nc" id="L52">        this.queue = queue;</span>
+<span class="nc" id="L53">        this.servers = servers;</span>
+<span class="nc" id="L54">        this.simdExecutor = simdExecutor;</span>
+<span class="nc" id="L55">        this.client = client;</span>
+<span class="nc" id="L56">        this.fileNameWithoutExtension = fileNameWithoutExtension;</span>
+<span class="nc" id="L57">        this.fileExtension = fileExtension;</span>
+<span class="nc" id="L58">        this.clientWindow = clientWindow;</span>
+<span class="nc" id="L59">    }</span>
+
+    /**
+     * Consumes image parts from the queue and processes them.
+     */
+
+    @Override
+    public void run() {
+        while (true) {
+            try {
+<span class="nc" id="L69">                ImagePart imagePart = queue.take();</span>
+<span class="nc" id="L70">                boolean processed = false;</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                for (Server server : servers) {</span>
+<span class="nc" id="L72">                    synchronized (server) {</span>
+<span class="nc bnc" id="L73" title="All 4 branches missed.">                        if (server.getWorkload() &lt; server.getMaxWorkload() &amp;&amp; server.getWorkload() &gt; 0) {</span>
+<span class="nc" id="L74">                            processImagePart(imagePart, client, simdExecutor, server);</span>
+<span class="nc" id="L75">                            processed = true;</span>
+<span class="nc" id="L76">                            break;</span>
+                        }
+<span class="nc" id="L78">                    }</span>
+<span class="nc" id="L79">                }</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                if (!processed) {</span>
+<span class="nc" id="L81">                    queue.add(imagePart);</span>
+                }
+<span class="nc" id="L83">            } catch (InterruptedException e) {</span>
+<span class="nc" id="L84">                Thread.currentThread().interrupt();</span>
+<span class="nc" id="L85">                break;</span>
+<span class="nc" id="L86">            }</span>
+        }
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * Processes an image part.
+     *
+     * @param imagePart    The image part to process.
+     * @param client       The client to use.
+     * @param simdExecutor The SIMD executor to use.
+     * @param server       The server to use.
+     */
+
+    public void processImagePart(ImagePart imagePart, Client client, SIMDExecutor simdExecutor, Server server) {
+<span class="nc" id="L100">        simdExecutor.execute(imagePart.getRow(), imagePart.getColumn());</span>
+<span class="nc" id="L101">        Request request = new Request(&quot;greeting&quot;, &quot;Hello, Server!&quot;, imagePart.getImage());</span>
+<span class="nc" id="L102">        Response response = client.sendRequestAndReceiveResponse(&quot;localhost&quot;, server.getPort(), request);</span>
+<span class="nc" id="L103">        BufferedImage processedSubImage = ImageTransformer.createImageFromBytes(response.getImageSection());</span>
+<span class="nc" id="L104">        imagePart.setImage(processedSubImage);</span>
+<span class="nc" id="L105">        clientWindow.updateImage(processedSubImage);</span>
+<span class="nc" id="L106">        client.sendImagePart(processedSubImage, fileNameWithoutExtension + &quot;_edited&quot;, fileExtension);</span>
+<span class="nc" id="L107">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigFile.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">first-project</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">ConfigFile.java</span></div><h1>ConfigFile.java</h1><pre class="source lang-java linenums">import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
+
+/**
+ * A simple configuration file reader.
+ */
+public class ConfigFile extends Properties {
+    /**
+     * The configuration file properties.
+     */
+    Properties configFileProperties;
+
+    /**
+     * Constructs a new configuration file reader with the specified file path.
+     *
+     * @param configFilePath The path to the configuration file.
+     */
+<span class="fc" id="L21">    public ConfigFile(String configFilePath) {</span>
+<span class="fc" id="L22">        this.configFileProperties = new Properties();</span>
+<span class="fc" id="L23">        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFilePath), StandardCharsets.UTF_8))){</span>
+<span class="fc" id="L24">            this.configFileProperties.load(reader);</span>
+<span class="fc" id="L25">        } catch (Exception e) {</span>
+<span class="fc" id="L26">            e.printStackTrace();</span>
+<span class="fc" id="L27">            this.configFileProperties = null;</span>
+<span class="fc" id="L28">        }</span>
+<span class="fc" id="L29">    }</span>
+
+    /**
+     * Gets the string property with the specified key.
+     *
+     * @param key The key of the property to get.
+     * @return The string property with the specified key, or null if the key is not found.
+     */
+
+    public int getIntProperty(String key) {
+<span class="fc" id="L39">        String property = this.configFileProperties.getProperty(key);</span>
+<span class="fc" id="L40">        return Integer.parseInt(property);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,93 @@
+@options
+@argfile
+-encoding
+'Cp1252'
+-protected
+-source
+'17'
+-sourcepath
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2024. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'D:/a/pa-distributed-img/pa-distributed-img/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'first-project 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'first-project 1.0-SNAPSHOT API'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/Client.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/ClientWindow.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/ConfigFile.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/ImageConsumerTask.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/ImagePart.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/ImageProcessor.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/ImageProducer.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/ImageReader.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/ImageTransformer.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/LoadInfo.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/Main.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/Request.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/Response.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/Server.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/ServerInfo.java'
+'D:/a/pa-distributed-img/pa-distributed-img/src/main/java/SIMDExecutor.java'
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\Client.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\ClientWindow.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\ConfigFile.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\ImageConsumerTask.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\ImagePart.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\ImageProcessor.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\ImageProducer.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\ImageReader.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\ImageTransformer.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\LoadInfo.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\Main.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\Request.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\Response.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\Server.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\ServerInfo.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java\SIMDExecutor.java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\src\main\java = 1711127659781
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\allclasses-index.html = 1711127730794
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\allpackages-index.html = 1711127730810
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\Client.html = 1711127729965
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\ClientWindow.html = 1711127730246
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\ConfigFile.html = 1711127730293
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\element-list = 1711127730544
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\help-doc.html = 1711127730857
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\ImageConsumerTask.html = 1711127730324
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\ImagePart.html = 1711127730340
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\ImageProcessor.html = 1711127730355
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\ImageProducer.html = 1711127730371
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\ImageReader.html = 1711127730371
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\ImageTransformer.html = 1711127730402
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\index-all.html = 1711127730841
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\index.html = 1711127730841
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\jquery-ui.overrides.css = 1711127730872
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\LoadInfo.html = 1711127730418
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\Main.html = 1711127730438
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\member-search-index.js = 1711127730810
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\module-search-index.js = 1711127730810
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\overview-tree.html = 1711127730763
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\package-search-index.js = 1711127730810
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\package-summary.html = 1711127730559
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\package-tree.html = 1711127730575
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\package-use.html = 1711127730763
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\Request.html = 1711127730466
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\Response.html = 1711127730481
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\script.js = 1711127730857
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\search.js = 1711127730857
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\serialized-form.html = 1711127730591
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\Server.html = 1711127730512
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\ServerInfo.html = 1711127730528
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\SIMDExecutor.html = 1711127730528
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\stylesheet.css = 1711127730857
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\tag-search-index.js = 1711127730810
+D:\a\pa-distributed-img\pa-distributed-img\target\site\apidocs\type-search-index.js = 1711127730810

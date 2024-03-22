@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImageProducer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">first-project</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">ImageProducer.java</span></div><h1>ImageProducer.java</h1><pre class="source lang-java linenums">import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+/**
+ * A class that produces image parts.
+ */
+
+public class ImageProducer implements Runnable {
+    /**
+     * The image to use.
+     */
+    private final BufferedImage image;
+    /**
+     * The number of rows to use.
+     */
+    private final int nRows;
+    /**
+     * The number of columns to use.
+     */
+    private final int nCols;
+    /**
+     * The queue to use.
+     */
+    private final BlockingQueue&lt;ImagePart&gt; queue;
+    /**
+     * The servers to use.
+     */
+    private final List&lt;Server&gt; servers;
+
+    /**
+     * Constructs a new image producer with the specified image, number of rows, number of columns, queue, and servers.
+     *
+     * @param image  The image to use.
+     * @param nRows  The number of rows to use.
+     * @param nCols  The number of columns to use.
+     * @param queue  The queue to use.
+     * @param servers The servers to use.
+     */
+
+<span class="fc" id="L40">    public ImageProducer(BufferedImage image, int nRows, int nCols, BlockingQueue&lt;ImagePart&gt; queue, List&lt;Server&gt; servers) {</span>
+<span class="fc" id="L41">        this.image = image;</span>
+<span class="fc" id="L42">        this.nRows = nRows;</span>
+<span class="fc" id="L43">        this.nCols = nCols;</span>
+<span class="fc" id="L44">        this.queue = queue;</span>
+<span class="fc" id="L45">        this.servers = servers;</span>
+<span class="fc" id="L46">    }</span>
+
+    /**
+     * Produces image parts and puts them in the queue.
+     */
+
+    @Override
+    public void run() {
+<span class="fc" id="L54">        BufferedImage[][] subImages = ImageTransformer.splitImage(image, nRows, nCols);</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        for (int i = 0; i &lt; nRows; i++) {</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            for (int j = 0; j &lt; nCols; j++) {</span>
+                try {
+<span class="fc bfc" id="L58" title="All 2 branches covered.">                    if (isServerAvailable()) {</span>
+<span class="fc" id="L59">                        queue.put(new ImagePart(subImages[i][j], i, j,new SIMDExecutor(subImages[i][j], nCols, nRows)));</span>
+                    }
+<span class="nc" id="L61">                } catch (InterruptedException e) {</span>
+<span class="nc" id="L62">                    Thread.currentThread().interrupt();</span>
+<span class="fc" id="L63">                }</span>
+            }
+        }
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * Checks if a server is available.
+     *
+     * @return True if a server is available, false otherwise.
+     */
+
+    boolean isServerAvailable() {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (Server server : servers) {</span>
+<span class="pc bpc" id="L76" title="1 of 4 branches missed.">            if (server.getWorkload() &lt; server.getMaxWorkload() &amp;&amp; server.getWorkload() &gt; 0){</span>
+<span class="fc" id="L77">                return true;</span>
+            }
+<span class="fc" id="L79">        }</span>
+<span class="fc" id="L80">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

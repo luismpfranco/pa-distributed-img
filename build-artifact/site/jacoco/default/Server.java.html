@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Server.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">first-project</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Server.java</span></div><h1>Server.java</h1><pre class="source lang-java linenums">import java.awt.image.BufferedImage;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * A TCP/IP server that listens for connections on a specified port and handles each client connection in a separate
+ * thread.
+ */
+public class Server extends Thread {
+    /**
+     * The port number on which the server will listen for incoming connections.
+     */
+    private final int port;
+    /**
+     * The load information.
+     */
+    private LoadInfo loadInfo;
+    /**
+     * The workload of the server.
+     */
+    private int workload;
+    /**
+     * The maximum workload of the server.
+     */
+    private final int maxWorkload;
+    /**
+     * The list of client handlers.
+     */
+    private static List&lt;ClientHandler&gt; clientHandlers;
+
+    /**
+     * Constructs a new server with the specified port number, load information, and maximum workload.
+     *
+     * @param port       The port number on which the server will listen for incoming connections.
+     * @param loadInfo   The load information.
+     * @param maxWorkload The maximum workload of the server.
+     */
+<span class="fc" id="L43">    public Server ( int port, LoadInfo loadInfo, int maxWorkload) {</span>
+<span class="fc" id="L44">        this.port = port;</span>
+<span class="fc" id="L45">        this.workload = 0;</span>
+<span class="fc" id="L46">        this.loadInfo = loadInfo;</span>
+<span class="fc" id="L47">        this.maxWorkload = maxWorkload;</span>
+<span class="fc" id="L48">    }</span>
+
+    /**
+     * Gets the port number on which the server will listen for incoming connections.
+     *
+     * @return The port number on which the server will listen for incoming connections.
+     */
+    public int getPort() {
+<span class="fc" id="L56">        return port;</span>
+    }
+
+    /**
+     * The entry point of the server thread. Starts the server to accept and handle client connections.
+     */
+    @Override
+    public void run ( ) {
+        try {
+<span class="nc" id="L65">            startServer ( );</span>
+<span class="nc" id="L66">        } catch ( Exception e ) {</span>
+<span class="nc" id="L67">            e.printStackTrace ( );</span>
+<span class="nc" id="L68">        }</span>
+<span class="nc" id="L69">    }</span>
+
+    /**
+     * Initializes the server socket and continuously listens for client connections. Each client connection is handled
+     * in a new thread.
+     *
+     * @throws IOException If an I/O error occurs when opening the socket.
+     */
+    private void startServer ( ) throws IOException {
+<span class="nc" id="L78">        try ( ServerSocket serverSocket = new ServerSocket ( port ) ) {</span>
+<span class="nc" id="L79">            System.out.println ( &quot;Server started on port &quot; + port );</span>
+<span class="nc" id="L80">            clientHandlers = new ArrayList&lt;&gt;( );</span>
+            // Create a thread pool with a fixed number of threads.
+<span class="nc" id="L82">            ExecutorService executorService = Executors.newFixedThreadPool(10);</span>
+
+            while ( true ) {
+<span class="nc" id="L85">                Socket clientSocket = serverSocket.accept ( );</span>
+<span class="nc" id="L86">                ClientHandler handler = new ClientHandler(clientSocket);</span>
+<span class="nc" id="L87">                clientHandlers.add(handler);</span>
+
+<span class="nc" id="L89">                executorService.submit(handler);</span>
+<span class="nc" id="L90">            }</span>
+        }
+    }
+
+    /**
+     * Gets the workload of the server.
+     *
+     * @return The workload of the server.
+     */
+
+    public int getWorkload() {
+<span class="fc" id="L101">        return workload;</span>
+    }
+
+    /**
+     * Gets the maximum workload of the server.
+     *
+     * @return The maximum workload of the server.
+     */
+    public int getMaxWorkload() {
+<span class="fc" id="L110">        return this.maxWorkload;</span>
+    }
+
+    /**
+     * Increments the workload of the server.
+     */
+    public void incrementWorkload() {
+<span class="fc" id="L117">        this.workload++;</span>
+<span class="fc" id="L118">        this.loadInfo.updateLoad(String.valueOf(this.port), this.workload);</span>
+<span class="fc" id="L119">        System.out.println(&quot;The server &quot; + this.port + &quot; has a workload of &quot; + this.workload);</span>
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * Decrements the workload of the server.
+     */
+    public void decrementWorkload() {
+<span class="fc" id="L126">        this.workload--;</span>
+<span class="fc" id="L127">        this.loadInfo.updateLoad(String.valueOf(this.port), this.workload);</span>
+<span class="fc" id="L128">        System.out.println(&quot;The server &quot; + this.port + &quot; has a workload of &quot; + this.workload);</span>
+<span class="fc" id="L129">    }</span>
+
+    public void setWorkload(int i) {
+<span class="fc" id="L132">        this.workload = i;</span>
+<span class="fc" id="L133">    }</span>
+
+    /**
+     * Handles client connections. Reads objects from the client, processes them, and sends a response back.
+     */
+    private static class ClientHandler implements Runnable {
+        /**
+         * The client socket.
+         */
+        private final Socket clientSocket;
+        /**
+         * The output stream to send objects to the client.
+         */
+        private ObjectOutputStream out;
+        /**
+         * The input stream to read objects from the client.
+         */
+        private ObjectInputStream in;
+
+        /**
+         * Constructs a new ClientHandler instance.
+         *
+         * @param socket The client socket.
+         */
+<span class="nc" id="L157">        public ClientHandler ( Socket socket ) {</span>
+<span class="nc" id="L158">            this.clientSocket = socket;</span>
+<span class="nc" id="L159">        }</span>
+
+        /**
+         * The entry point of the client handler thread. Manages input and output streams for communication with the
+         * client.
+         */
+
+        @Override
+        public void run ( ) {
+            try {
+<span class="nc" id="L169">                this.out = new ObjectOutputStream ( clientSocket.getOutputStream ( ) ) ;</span>
+<span class="nc" id="L170">                this.in = new ObjectInputStream ( clientSocket.getInputStream ( ) );</span>
+
+                Request request;
+                // Continuously read objects sent by the client and respond to each.
+<span class="nc bnc" id="L174" title="All 2 branches missed.">                while ( ( request = ( Request ) in.readObject ( ) ) != null ) {</span>
+<span class="nc" id="L175">                    out.writeObject ( handleRequest ( request ) );</span>
+                }
+
+<span class="nc" id="L178">                System.out.println(request.toString());</span>
+
+<span class="nc" id="L180">            } catch ( EOFException e ) {</span>
+<span class="nc" id="L181">                System.out.println ( &quot;Client disconnected.&quot; );</span>
+<span class="nc" id="L182">            } catch ( IOException | ClassNotFoundException e ) {</span>
+<span class="nc" id="L183">                System.err.println ( &quot;Error handling client: &quot; + e.getMessage ( ) );</span>
+            } finally {
+                try {
+<span class="nc" id="L186">                    clientSocket.close ( );</span>
+<span class="nc" id="L187">                } catch ( IOException e ) {</span>
+<span class="nc" id="L188">                    System.err.println ( &quot;Error closing client socket: &quot; + e.getMessage ( ) );</span>
+<span class="nc" id="L189">                }</span>
+            }
+<span class="nc" id="L191">        }</span>
+
+
+
+        /**
+         * Processes the client's request and generates a response.
+         *
+         * @param request The object received from the client.
+         *
+         * @return The response object to be sent back to the client.
+         */
+        private Response handleRequest(Request request) {
+<span class="nc" id="L203">            BufferedImage editedImage = ImageTransformer.removeReds(ImageTransformer.createImageFromBytes(request.getImageSection()));</span>
+<span class="nc" id="L204">            return new Response(&quot;OK&quot;, &quot;Hello, Client!&quot;, editedImage);</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

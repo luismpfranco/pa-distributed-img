@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SIMDExecutor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">first-project</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">SIMDExecutor.java</span></div><h1>SIMDExecutor.java</h1><pre class="source lang-java linenums">import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.concurrent.Semaphore;
+/**
+ * A class that executes SIMD operations on an image.
+ */
+public class SIMDExecutor {
+    /**
+     * The image to process.
+     */
+    private final BufferedImage image;
+    /**
+     * The number of columns to use.
+     */
+    private final int nCols;
+    /**
+     * The number of rows to use.
+     */
+    private final int nRows;
+    /**
+     * The split images.
+     */
+    private BufferedImage[][] splitImages;
+    /**
+     * The semaphore to use.
+     */
+<span class="fc" id="L27">    private final Semaphore semaphore = new Semaphore(10); // Limit to 10 sub-images being processed at a time</span>
+
+    /**
+     * Constructs a new SIMDExecutor with the specified image, number of columns, and number of rows.
+     *
+     * @param image  The image to process.
+     * @param nCols  The number of columns to use.
+     * @param nRows  The number of rows to use.
+     */
+<span class="fc" id="L36">    public SIMDExecutor(BufferedImage image, int nCols, int nRows) {</span>
+<span class="fc" id="L37">        this.image = image;</span>
+<span class="fc" id="L38">        this.nCols = nCols;</span>
+<span class="fc" id="L39">        this.nRows = nRows;</span>
+<span class="fc" id="L40">        this.splitImages = ImageTransformer.splitImage(image,nRows,nCols);</span>
+<span class="fc" id="L41">    }</span>
+
+    /**
+     * Executes the SIMD operation on the specified sub-image.
+     *
+     * @param i The row index of the sub-image.
+     * @param j The column index of the sub-image.
+     */
+
+    public void execute(int i, int j){
+<span class="fc" id="L51">        int subImageWidth = splitImages[i][j].getWidth();</span>
+<span class="fc" id="L52">        int subImageHeight = splitImages[i][j].getHeight();</span>
+
+        Color c;
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        for (int x = 0; x &lt; subImageWidth; x++) {</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            for (int y = 0; y &lt; subImageHeight; y++) {</span>
+<span class="fc" id="L57">                c = new Color(splitImages[i][j].getRGB(x, y));</span>
+<span class="fc" id="L58">                int g = c.getGreen();</span>
+<span class="fc" id="L59">                int b = c.getBlue();</span>
+<span class="fc" id="L60">                splitImages[i][j].setRGB(x, y, new Color(0, g, b).getRGB());</span>
+            }
+        }
+<span class="fc" id="L63">    }</span>
+
+    /**
+     * Processes all sub-images.
+     */
+
+    public void processAllSubImages() {
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        for (int i = 0; i &lt; nRows; i++) {</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            for (int j = 0; j &lt; nCols; j++) {</span>
+<span class="nc" id="L72">                final int finalI = i;</span>
+<span class="nc" id="L73">                final int finalJ = j;</span>
+                try {
+<span class="nc" id="L75">                    semaphore.acquire();</span>
+<span class="nc" id="L76">                    new Thread(() -&gt; {</span>
+                        try {
+<span class="nc" id="L78">                            execute(finalI, finalJ);</span>
+                        } finally {
+<span class="nc" id="L80">                            semaphore.release();</span>
+                        }
+<span class="nc" id="L82">                    }).start();</span>
+<span class="nc" id="L83">                } catch (InterruptedException e) {</span>
+<span class="nc" id="L84">                    Thread.currentThread().interrupt();</span>
+<span class="nc" id="L85">                }</span>
+            }
+        }
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * Gets the split images.
+     *
+     * @param i The row index of the sub-image.
+     * @param j The column index of the sub-image.
+     * @return The split images.
+     */
+
+    public BufferedImage getSplitImages(int i, int j) {
+<span class="fc" id="L99">        return splitImages[i][j];</span>
+    }
+
+    /**
+     * Gets the image.
+     *
+     * @return The image.
+     */
+
+    public BufferedImage getImage() {
+<span class="fc" id="L109">        return image;</span>
+    }
+
+    /**
+     * Gets the number of columns.
+     *
+     * @return The number of columns.
+     */
+
+    public int getnCols() {
+<span class="fc" id="L119">        return nCols;</span>
+    }
+
+    /**
+     * Gets the number of rows.
+     *
+     * @return The number of rows.
+     */
+    public int getnRows() {
+<span class="fc" id="L128">        return nRows;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

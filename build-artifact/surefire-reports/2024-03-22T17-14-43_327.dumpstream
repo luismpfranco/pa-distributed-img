@@ -1,0 +1,4 @@
+# Created at 2024-03-22T17:14:44.391
+Boot Manifest-JAR contains absolute paths in classpath 'D:\a\pa-distributed-img\pa-distributed-img\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+

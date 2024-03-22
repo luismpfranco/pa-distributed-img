@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Response.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">first-project</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Response.java</span></div><h1>Response.java</h1><pre class="source lang-java linenums">import java.awt.image.BufferedImage;
+import java.io.Serial;
+import java.io.Serializable;
+
+/**
+ * Represents a response received from a server. This class can be extended to include various types of data depending
+ * on the application's needs.
+ */
+public class Response implements Serializable {
+    /**
+     * The serial version UID.
+     */
+    @Serial
+    private static final long serialVersionUID = 1L; // Ensure compatibility during serialization
+    /**
+     * The status of the response.
+     */
+    private String status;
+    /**
+     * The message of the response.
+     */
+    private String message;
+    /**
+     * The image section.
+     */
+    private byte[] imageSection;
+
+
+    /**
+     * Constructs a new Response with specified status and message.
+     *
+     * @param status  The status of the response, e.g., &quot;Success&quot; or &quot;Error&quot;.
+     * @param message The message or data contained in the response.
+     */
+<span class="fc" id="L35">    public Response ( String status , String message , BufferedImage imageSection) {</span>
+<span class="fc" id="L36">        this.status = status;</span>
+<span class="fc" id="L37">        this.message = message;</span>
+<span class="fc" id="L38">        this.imageSection = ImageTransformer.createBytesFromImage(imageSection);</span>
+<span class="fc" id="L39">    }</span>
+
+    /**
+     * Returns the status of the response.
+     *
+     * @return The status of the response.
+     */
+    public String getStatus ( ) {
+<span class="fc" id="L47">        return status;</span>
+    }
+
+    /**
+     * Sets the status of the response.
+     *
+     * @param status The status of the response.
+     */
+    public void setStatus ( String status ) {
+<span class="fc" id="L56">        this.status = status;</span>
+<span class="fc" id="L57">    }</span>
+
+    /**
+     * Returns the message of the response.
+     *
+     * @return The message of the response.
+     */
+    public String getMessage ( ) {
+<span class="fc" id="L65">        return message;</span>
+    }
+
+    /**
+     * Sets the message of the response.
+     *
+     * @param message The message of the response.
+     */
+    public void setMessage ( String message ) {
+<span class="fc" id="L74">        this.message = message;</span>
+<span class="fc" id="L75">    }</span>
+
+    /**
+     * Returns the image section.
+     *
+     * @return The image section.
+     */
+    public byte[] getImageSection() {
+<span class="fc" id="L83">        return imageSection;</span>
+    }
+
+    /**
+     * Sets the image section.
+     *
+     * @param imageSection The image section.
+     */
+    public void setImageSection(byte[] imageSection) {
+<span class="fc" id="L92">        this.imageSection = imageSection;</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Returns a string representation of the response.
+     *
+     * @return A string representation of the response.
+     */
+    @Override
+    public String toString ( ) {
+<span class="fc" id="L102">        return &quot;Response{&quot; +</span>
+                &quot;status='&quot; + status + '\'' +
+                &quot;, message='&quot; + message + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

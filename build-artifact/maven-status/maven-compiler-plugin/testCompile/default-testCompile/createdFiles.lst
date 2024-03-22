@@ -1,0 +1,13 @@
+ConfigFileTest.class
+ImageTransformerTest.class
+ImagePartsTest.class
+ResponseTest.class
+ServerInfoTest.class
+ImageReaderTest.class
+RequestTest.class
+SIMDExecutorTest.class
+ClientTest.class
+LoadInfoTest.class
+ServerSocketTest.class
+ServerTest.class
+ImageProducerTest.class

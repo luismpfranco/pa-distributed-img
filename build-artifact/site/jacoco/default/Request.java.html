@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Request.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">first-project</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Request.java</span></div><h1>Request.java</h1><pre class="source lang-java linenums">import java.awt.image.BufferedImage;
+import java.io.Serial;
+import java.io.Serializable;
+
+/**
+ * Represents a request to be sent to a server. This class can be extended to include various types of data depending on
+ * the application's needs.
+ */
+public class Request implements Serializable {
+    /**
+     * The serial version UID.
+     */
+    @Serial
+    private static final long serialVersionUID = 1L; // Ensure compatibility during serialization
+    /**
+     * The type of the message.
+     */
+    private String messageType;
+    /**
+     * The content of the message.
+     */
+    private String messageContent;
+    /**
+     * The image section.
+     */
+    private byte[] imageSection;
+
+    /**
+     * Constructs a new Request with specified message type and content.
+     *
+     * @param messageType    The type of the message, which can be used by the server to determine how to process the
+     *                       request.
+     * @param messageContent The content of the message.
+     */
+<span class="fc" id="L35">    public Request ( String messageType , String messageContent , BufferedImage imageSection ) {</span>
+<span class="fc" id="L36">        this.messageType = messageType;</span>
+<span class="fc" id="L37">        this.messageContent = messageContent;</span>
+<span class="fc" id="L38">        this.imageSection = ImageTransformer.createBytesFromImage(imageSection);</span>
+<span class="fc" id="L39">        }</span>
+
+    /**
+     * Returns the type of the message.
+     *
+     * @return The type of the message.
+     */
+    public String getMessageType ( ) {
+<span class="fc" id="L47">        return messageType;</span>
+    }
+
+    /**
+     * Sets the type of the message.
+     *
+     * @param messageType The type of the message.
+     */
+    public void setMessageType ( String messageType ) {
+<span class="fc" id="L56">        this.messageType = messageType;</span>
+<span class="fc" id="L57">    }</span>
+
+    /**
+     * Returns the content of the message.
+     *
+     * @return The content of the message.
+     */
+    public String getMessageContent ( ) {
+<span class="fc" id="L65">        return messageContent;</span>
+    }
+
+    /**
+     * Sets the content of the message.
+     *
+     * @param messageContent The content of the message.
+     */
+    public void setMessageContent ( String messageContent ) {
+<span class="fc" id="L74">        this.messageContent = messageContent;</span>
+<span class="fc" id="L75">    }</span>
+    /**
+     * Returns the image section.
+     *
+     * @return The image section.
+     */
+
+    public byte[] getImageSection() {
+<span class="fc" id="L83">        return imageSection;</span>
+    }
+
+    /**
+     * Sets the image section.
+     *
+     * @param imageSection The image section.
+     */
+    public void setImageSection(byte[] imageSection) {
+<span class="fc" id="L92">        this.imageSection = imageSection;</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * Returns a string representation of the request.
+     *
+     * @return A string representation of the request.
+     */
+
+    @Override
+    public String toString ( ) {
+<span class="fc" id="L103">        return &quot;Request{&quot; +</span>
+                &quot;messageType='&quot; + messageType + '\'' +
+                &quot;, messageContent='&quot; + messageContent + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

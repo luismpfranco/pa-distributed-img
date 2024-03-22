@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ImageTransformer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">first-project</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">ImageTransformer.java</span></div><h1>ImageTransformer.java</h1><pre class="source lang-java linenums">import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+
+/**
+ * The ImageTransformer class implements a set of methods for performing transformations (split, join, and red removal)
+ * in a specified image.
+ */
+<span class="nc" id="L13">public class ImageTransformer {</span>
+
+    /**
+     * Splits a given image into a grid of sub-images.
+     *
+     * @param image     the BufferedImage containing the image
+     * @param nRows     the number of rows in the grid
+     * @param nColumns  the number of columns in the grid
+     *
+     * @return a BufferedImage array containing the sub-images
+     */
+    public static BufferedImage[][] splitImage(BufferedImage image, int nRows, int nColumns) {
+<span class="fc" id="L25">        int height = (image.getHeight() / nRows) * nRows;</span>
+<span class="fc" id="L26">        int width = (image.getWidth() / nColumns) * nColumns;</span>
+
+<span class="fc" id="L28">        BufferedImage resizedImage = image.getSubimage(0, 0, width, height);</span>
+
+<span class="fc" id="L30">        int subImageWidth = width / nColumns;</span>
+<span class="fc" id="L31">        int subImageHeight = height / nRows;</span>
+<span class="fc" id="L32">        BufferedImage[][] images = new BufferedImage[nRows][nColumns];</span>
+
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for (int i = 0; i &lt; nRows; i++) {</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">            for (int j = 0; j &lt; nColumns; j++) {</span>
+<span class="fc" id="L36">                images[i][j] = resizedImage.getSubimage(j * subImageWidth, i * subImageHeight, subImageWidth, subImageHeight);</span>
+            }
+        }
+<span class="fc" id="L39">        return images;</span>
+    }
+
+    /**
+     * Removes the red component of a given image.
+     *
+     * @param image the BufferedImage containing the image
+     *
+     * @return a BufferedImage without the red component
+     */
+    public static BufferedImage removeReds ( BufferedImage image ) {
+<span class="fc" id="L50">        int width = image.getWidth ( );</span>
+<span class="fc" id="L51">        int height = image.getHeight ( );</span>
+<span class="fc" id="L52">        int type = image.getType ( );</span>
+        Color c;
+<span class="fc" id="L54">        BufferedImage resultingImage = new BufferedImage ( width , height , type );</span>
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        for ( int i = 0 ; i &lt; width ; i++ ) {</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            for ( int j = 0 ; j &lt; height ; j++ ) {</span>
+<span class="fc" id="L57">                c = new Color ( image.getRGB ( i , j ) );</span>
+<span class="fc" id="L58">                int g = c.getGreen ( );</span>
+<span class="fc" id="L59">                int b = c.getBlue ( );</span>
+<span class="fc" id="L60">                resultingImage.setRGB ( i , j , new Color ( 0 , g , b ).getRGB ( ) );</span>
+            }
+        }
+<span class="fc" id="L63">        return resultingImage;</span>
+    }
+
+
+    /**
+     * Joins a given array of BufferedImage in one final image. This method should be called after splitting the images
+     * using, for example, the method {@link ImageTransformer#splitImage(BufferedImage , int , int)}.
+     *
+     * @param splitImages the BufferedImage array containing the sub-images
+     * @param width       the width of the final image
+     * @param height      the height of the final image
+     * @param type        the type of the final image
+     *
+     * @return a BufferedImage array containing the image joined
+     */
+    public static BufferedImage joinImages ( BufferedImage[][] splitImages , int width , int height , int type ) {
+<span class="fc" id="L79">        BufferedImage resultingImage = new BufferedImage ( width , height , type );</span>
+<span class="fc" id="L80">        int nRows = splitImages.length;</span>
+<span class="fc" id="L81">        int nColumns = splitImages[ 0 ].length;</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for ( int i = 0 ; i &lt; nRows ; i++ ) {</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">            for ( int j = 0 ; j &lt; nColumns ; j++ ) {</span>
+<span class="fc" id="L84">                BufferedImage split = splitImages[ i ][ j ];</span>
+<span class="fc" id="L85">                resultingImage.createGraphics ( ).drawImage ( split , split.getWidth ( ) * j , split.getHeight ( ) * i , null );</span>
+            }
+        }
+<span class="fc" id="L88">        return resultingImage;</span>
+    }
+
+    /**
+     *  Creates a Buffered image from a byte array
+     * @param imageData - Byte array of with the image
+     * @return - Image as a BufferedItem object
+     */
+    public static BufferedImage createImageFromBytes(byte[] imageData) {
+<span class="fc" id="L97">        ByteArrayInputStream bais = new ByteArrayInputStream(imageData);</span>
+        try {
+<span class="fc" id="L99">            return ImageIO.read(bais);</span>
+<span class="nc" id="L100">        } catch (IOException e) {</span>
+<span class="nc" id="L101">            throw new RuntimeException(e);</span>
+        }
+    }
+
+    /**
+     * Serializes an image as a byte array so it can be sent through a socket. It is important to define the type of image
+     * @param image - image to be converted as a byte[]
+     * @return - image as an array of bytes
+     */
+    public static byte[] createBytesFromImage(BufferedImage image){
+<span class="fc" id="L111">        ByteArrayOutputStream baos = new ByteArrayOutputStream();</span>
+        try {
+<span class="fc" id="L113">            ImageIO.write(image, &quot;png&quot;, baos);</span>
+<span class="nc" id="L114">        } catch (IOException e) {</span>
+<span class="nc" id="L115">            throw new RuntimeException(e);</span>
+<span class="fc" id="L116">        }</span>
+<span class="fc" id="L117">        return baos.toByteArray();</span>
+    }
+
+    /**
+     * Reconstructs an image from an array of BufferedImages.
+     *
+     * @param imageParts the array of BufferedImages
+     *
+     * @return the reconstructed image
+     */
+
+    public static BufferedImage reconstructImage(BufferedImage[][] imageParts) {
+<span class="fc" id="L129">        int partHeight = imageParts[0][0].getHeight();</span>
+<span class="fc" id="L130">        int partWidth = imageParts[0][0].getWidth();</span>
+<span class="fc" id="L131">        int totalHeight = partHeight * imageParts.length;</span>
+<span class="fc" id="L132">        int totalWidth = partWidth * imageParts[0].length;</span>
+
+<span class="fc" id="L134">        BufferedImage reconstructedImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB);</span>
+<span class="fc" id="L135">        Graphics g = reconstructedImage.getGraphics();</span>
+
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        for (int i = 0; i &lt; imageParts.length; i++) {</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">            for (int j = 0; j &lt; imageParts[i].length; j++) {</span>
+<span class="fc" id="L139">                g.drawImage(imageParts[i][j], j * partWidth, i * partHeight, null);</span>
+            }
+        }
+
+<span class="fc" id="L143">        g.dispose();</span>
+<span class="fc" id="L144">        return reconstructedImage;</span>
+    }
+
+    /**
+     * Saves an edited image to the results folder.
+     *
+     * @param image the edited image
+     * @param originalName the original name of the image
+     * @param extension the extension of the image
+     */
+
+    public static void saveEditedImage(BufferedImage image, String originalName, String extension) {
+        try {
+<span class="fc" id="L157">            String editedName = originalName + &quot;_edited.&quot; + extension;</span>
+<span class="fc" id="L158">            File outputfile = new File(&quot;results/&quot; + editedName);</span>
+<span class="fc" id="L159">            ImageIO.write(image, extension, outputfile);</span>
+<span class="fc" id="L160">            System.out.println(&quot;Edited image saved as &quot; + outputfile.getPath());</span>
+<span class="nc" id="L161">        } catch (IOException e) {</span>
+<span class="nc" id="L162">            e.printStackTrace();</span>
+<span class="fc" id="L163">        }</span>
+<span class="fc" id="L164">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

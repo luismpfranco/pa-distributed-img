@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoadInfo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">first-project</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">LoadInfo.java</span></div><h1>LoadInfo.java</h1><pre class="source lang-java linenums">import java.io.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Represents the load information of servers.
+ */
+
+public class LoadInfo {
+    /**
+     * The filename of the load information.
+     */
+    private final String filename;
+
+    /**
+     * Constructs a new load information with the specified filename.
+     *
+     * @param filename The filename to use.
+     */
+
+<span class="fc" id="L22">    public LoadInfo(String filename) {</span>
+<span class="fc" id="L23">        this.filename = filename;</span>
+<span class="fc" id="L24">    }</span>
+
+    /**
+     * Updates the load of the specified server.
+     *
+     * @param serverId The server ID to update.
+     * @param load     The load to update.
+     */
+
+    public synchronized void updateLoad(String serverId, int load) {
+<span class="fc" id="L34">        Map&lt;String, Integer&gt; loadMap = readLoadInfo();</span>
+<span class="fc" id="L35">        loadMap.put(serverId, load);</span>
+<span class="fc" id="L36">        writeLoadInfo(loadMap);</span>
+<span class="fc" id="L37">    }</span>
+
+    /**
+     * Gets the least loaded server.
+     *
+     * @return The least loaded server.
+     */
+
+    public synchronized String getLeastLoadedServer(){
+<span class="fc" id="L46">        Map&lt;String, Integer&gt; loadMap = readLoadInfo();</span>
+<span class="fc" id="L47">        return  Collections.min(loadMap.entrySet(), Map.Entry.comparingByValue()).getKey();</span>
+    }
+
+    /**
+     * Reads the load information from the file.
+     *
+     * @return The load information read from the file.
+     */
+
+    public Map&lt;String, Integer&gt; readLoadInfo() {
+<span class="fc" id="L57">        Map&lt;String, Integer&gt; loadMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L58">        try(BufferedReader reader = new BufferedReader(new FileReader(filename))) {</span>
+            String line;
+<span class="fc bfc" id="L60" title="All 2 branches covered.">            while ((line = reader.readLine()) != null) {</span>
+<span class="fc" id="L61">                String[] parts = line.split(&quot; &quot;);</span>
+<span class="fc" id="L62">                loadMap.put(parts[0], Integer.parseInt(parts[1]));</span>
+<span class="fc" id="L63">            }</span>
+<span class="nc" id="L64">        } catch (IOException e) {</span>
+<span class="nc" id="L65">            e.printStackTrace();</span>
+<span class="fc" id="L66">        }</span>
+<span class="fc" id="L67">        return loadMap;</span>
+    }
+
+    /**
+     * Writes the load information to the file.
+     *
+     * @param loadMap The load information to write.
+     */
+
+    public void writeLoadInfo(Map&lt;String, Integer&gt; loadMap) {
+<span class="fc" id="L77">        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            for (Map.Entry&lt;String, Integer&gt; entry : loadMap.entrySet()) {</span>
+<span class="fc" id="L79">                writer.println(entry.getKey() + &quot; &quot; + entry.getValue());</span>
+<span class="fc" id="L80">            }</span>
+<span class="nc" id="L81">        } catch (IOException e) {</span>
+<span class="nc" id="L82">            e.printStackTrace();</span>
+<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
