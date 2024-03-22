@@ -21,7 +21,7 @@ jobs:
           java-version: '17'
       - name: Build with Maven on ${{ matrix.os }}
         run: mvn package
-      - name: Run tests
+      - name: Run unit tests
         run: mvn test
       - name: Generate JaCoCo report
         run: mvn test jacoco:report

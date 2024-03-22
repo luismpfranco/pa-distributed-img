@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -47,6 +48,11 @@ class ClientWindowTest {
      * The icon.
      */
     private ImageIcon icon;
+
+    @BeforeAll
+    static void setUpClass() {
+        System.setProperty("java.awt.headless", "true");
+    }
 
     /**
      * Setup before each test.
