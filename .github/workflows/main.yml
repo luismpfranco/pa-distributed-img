@@ -1,4 +1,4 @@
-name: Java CI with Maven and JaCoCo (trying again 8)
+name: Java CI with Maven and JaCoCo (trying again 9)
 
 on:
   push:
