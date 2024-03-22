@@ -1,6 +1,6 @@
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -9,16 +9,47 @@ import java.net.UnknownHostException;
  */
 public class Client {
 
-    // The name of the client
+    /**
+     * The name of the client.
+     */
     private final String name;
+    /**
+     * The load information.
+     */
+    private final LoadInfo loadInfo;
+    /**
+     * The processed image parts.
+     */
+    private final BufferedImage[][] processedImageParts;
+    /**
+     * The current row.
+     */
+    private int currentRow = 0;
+    /**
+     * The current column.
+     */
+    private int currentColumn = 0;
+    /**
+     * The total number of rows.
+     */
+    private final int totalRows;
+    /**
+     * The total number of columns.
+     */
+    private final int totalColumns;
+
 
     /**
      * Constructs a new client with the specified name.
      *
      * @param name The name of the client.
      */
-    public Client ( String name ) {
+    public Client ( String name, LoadInfo loadInfo, int totalRows, int totalColumns ) {
         this.name = name;
+        this.loadInfo = loadInfo;
+        this.totalRows = totalRows;
+        this.totalColumns = totalColumns;
+        this.processedImageParts = new BufferedImage[totalRows][totalColumns];
     }
 
     /**
@@ -59,12 +90,85 @@ public class Client {
     }
 
     /**
+     * Sends an image part to the server and waits for a response.
+     *
+     * @param imagePart The image part to send to the server.
+     */
+
+    public void sendImagePart(BufferedImage imagePart, String name, String extension){
+        String leastLoadedServerHost = loadInfo.getLeastLoadedServer();
+        int port = Integer.parseInt(leastLoadedServerHost);
+        String host = "localhost"; // Replace with "leastLoadedServerHost" if the server is running on a different machine
+        Request request = new Request("imagePart", "Sending image part", imagePart);
+        try {
+            Response response = sendRequestAndReceiveResponse(host, port, request);
+            // Handle the response here
+            if (response != null) {
+                System.out.println("Response status: " + response.getStatus());
+                System.out.println("Response message: " + response.getMessage());
+                // If the response contains an image, you can process it here
+                if (response.getImageSection() != null) {
+                    byte[] receivedImage = response.getImageSection();
+                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(receivedImage));
+                    // Process the received image...
+                    File outputfile = new File("results/" + name +  "." + extension);
+                    ImageIO.write(image, "png", outputfile);
+                    System.out.println("Received image saved as " + outputfile.getPath());
+
+                    if (currentRow < totalRows && currentColumn < totalColumns) {
+                        processedImageParts[currentRow][currentColumn] = image;
+
+                        // Update currentRow and currentColumn for the next image part
+                        currentColumn++;
+                        if (currentColumn == totalColumns) {
+                            currentColumn = 0;
+                            currentRow++;
+                        }
+                    }
+
+                }
+            } else {
+                System.out.println("No response received from the server.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Returns the processed image parts.
+     *
+     * @return The processed image parts.
+     */
+    public BufferedImage[][] getProcessedImageParts() {
+        return processedImageParts;
+    }
+    /**
      * Returns the name of the client.
      *
      * @return The name of the client.
      */
-    public String getName ( ) {
+
+    public String getName() {
         return name;
     }
 
+    /**
+     * Returns the total number of rows.
+     *
+     * @return The total number of rows.
+     */
+
+    public int getTotalRows() {
+        return totalRows;
+    }
+
+    /**
+     * Returns the total number of columns.
+     *
+     * @return The total number of columns.
+     */
+    public int getTotalColumns() {
+        return totalColumns;
+    }
 }

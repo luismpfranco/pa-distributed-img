@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -12,29 +13,28 @@ import java.io.IOException;
 public class ImageTransformer {
 
     /**
-     * Splits a given image in sub-images according to the number of rows and columns specified in the arguments.
+     * Splits a given image into a grid of sub-images.
      *
-     * @param image    the BufferedImage containing the image
-     * @param nRows    the number of rows to split the image
-     * @param nColumns the number of columns to split the image
+     * @param image     the BufferedImage containing the image
+     * @param nRows     the number of rows in the grid
+     * @param nColumns  the number of columns in the grid
      *
      * @return a BufferedImage array containing the sub-images
      */
-    public static BufferedImage[][] splitImage ( BufferedImage image , int nRows , int nColumns ) {
-        if ( ( image.getHeight ( ) % nRows != 0 ) || ( image.getWidth ( ) % nColumns != 0 ) ) {
-            throw new IllegalArgumentException ( "Invalid number of rows or columns" );
-        }
-        int subImageHeight = image.getHeight ( ) / nRows;
-        int subImageWidth = image.getWidth ( ) / nColumns;
-        BufferedImage[][] images = new BufferedImage[ nRows ][ nColumns ];
-        int column = 0;
-        for ( int i = 0 ; i < image.getWidth ( ) ; i += subImageWidth ) {
-            int row = 0;
-            for ( int j = 0 ; j < image.getHeight ( ) ; j += subImageHeight ) {
-                images[ row ][ column ] = image.getSubimage ( i , j , subImageWidth , subImageHeight );
-                row = row + 1;
+    public static BufferedImage[][] splitImage(BufferedImage image, int nRows, int nColumns) {
+        int height = (image.getHeight() / nRows) * nRows;
+        int width = (image.getWidth() / nColumns) * nColumns;
+
+        BufferedImage resizedImage = image.getSubimage(0, 0, width, height);
+
+        int subImageWidth = width / nColumns;
+        int subImageHeight = height / nRows;
+        BufferedImage[][] images = new BufferedImage[nRows][nColumns];
+
+        for (int i = 0; i < nRows; i++) {
+            for (int j = 0; j < nColumns; j++) {
+                images[i][j] = resizedImage.getSubimage(j * subImageWidth, i * subImageHeight, subImageWidth, subImageHeight);
             }
-            column = column + 1;
         }
         return images;
     }
@@ -49,8 +49,9 @@ public class ImageTransformer {
     public static BufferedImage removeReds ( BufferedImage image ) {
         int width = image.getWidth ( );
         int height = image.getHeight ( );
+        int type = image.getType ( );
         Color c;
-        BufferedImage resultingImage = new BufferedImage ( width , height , BufferedImage.TYPE_INT_RGB );
+        BufferedImage resultingImage = new BufferedImage ( width , height , type );
         for ( int i = 0 ; i < width ; i++ ) {
             for ( int j = 0 ; j < height ; j++ ) {
                 c = new Color ( image.getRGB ( i , j ) );
@@ -61,6 +62,7 @@ public class ImageTransformer {
         }
         return resultingImage;
     }
+
 
     /**
      * Joins a given array of BufferedImage in one final image. This method should be called after splitting the images
@@ -113,5 +115,51 @@ public class ImageTransformer {
             throw new RuntimeException(e);
         }
         return baos.toByteArray();
+    }
+
+    /**
+     * Reconstructs an image from an array of BufferedImages.
+     *
+     * @param imageParts the array of BufferedImages
+     *
+     * @return the reconstructed image
+     */
+
+    public static BufferedImage reconstructImage(BufferedImage[][] imageParts) {
+        int partHeight = imageParts[0][0].getHeight();
+        int partWidth = imageParts[0][0].getWidth();
+        int totalHeight = partHeight * imageParts.length;
+        int totalWidth = partWidth * imageParts[0].length;
+
+        BufferedImage reconstructedImage = new BufferedImage(totalWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics g = reconstructedImage.getGraphics();
+
+        for (int i = 0; i < imageParts.length; i++) {
+            for (int j = 0; j < imageParts[i].length; j++) {
+                g.drawImage(imageParts[i][j], j * partWidth, i * partHeight, null);
+            }
+        }
+
+        g.dispose();
+        return reconstructedImage;
+    }
+
+    /**
+     * Saves an edited image to the results folder.
+     *
+     * @param image the edited image
+     * @param originalName the original name of the image
+     * @param extension the extension of the image
+     */
+
+    public static void saveEditedImage(BufferedImage image, String originalName, String extension) {
+        try {
+            String editedName = originalName + "_edited." + extension;
+            File outputfile = new File("results/" + editedName);
+            ImageIO.write(image, extension, outputfile);
+            System.out.println("Edited image saved as " + outputfile.getPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

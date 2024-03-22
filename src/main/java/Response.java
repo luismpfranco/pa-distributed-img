@@ -1,7 +1,4 @@
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -10,11 +7,22 @@ import java.io.Serializable;
  * on the application's needs.
  */
 public class Response implements Serializable {
+    /**
+     * The serial version UID.
+     */
     @Serial
     private static final long serialVersionUID = 1L; // Ensure compatibility during serialization
-
+    /**
+     * The status of the response.
+     */
     private String status;
+    /**
+     * The message of the response.
+     */
     private String message;
+    /**
+     * The image section.
+     */
     private byte[] imageSection;
 
 
@@ -66,14 +74,29 @@ public class Response implements Serializable {
         this.message = message;
     }
 
+    /**
+     * Returns the image section.
+     *
+     * @return The image section.
+     */
     public byte[] getImageSection() {
         return imageSection;
     }
 
+    /**
+     * Sets the image section.
+     *
+     * @param imageSection The image section.
+     */
     public void setImageSection(byte[] imageSection) {
         this.imageSection = imageSection;
     }
 
+    /**
+     * Returns a string representation of the response.
+     *
+     * @return A string representation of the response.
+     */
     @Override
     public String toString ( ) {
         return "Response{" +
