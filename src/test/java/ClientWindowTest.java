@@ -59,11 +59,11 @@ class ClientWindowTest {
      */
     @BeforeEach
     void setUp() {
-        imageProcessor = new ImageProcessor(numServers, null);
+        clientWindow = new ClientWindow(null, servers, client, simdExecutor);
         client = new Client(name,loadInfo,nRows,nCols);
         image = ImageReader.readImage("sample.png");
         simdExecutor = new SIMDExecutor(image,nCols,nRows);
-        clientWindow = new ClientWindow(imageProcessor, servers, client, simdExecutor);
+        imageProcessor = new ImageProcessor(numServers, clientWindow);
         clientWindow.setImageProcessor(imageProcessor);
         JLabel imageLabel = new JLabel();
         clientWindow.add(imageLabel);
