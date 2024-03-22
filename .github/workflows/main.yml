@@ -28,7 +28,7 @@ jobs:
       - name: Build with Maven on ${{ matrix.os }}
         run: mvn package
       - name: Run unit tests
-        run: mvn test
+        run: DISPLAY=:99 mvn test
       - name: Generate JaCoCo report
         run: mvn test jacoco:report
       - name: Generate Javadoc
