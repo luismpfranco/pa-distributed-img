@@ -1,4 +1,4 @@
-name: Java CI with Maven and JaCoCo (trying again 11)
+name: Java CI with Maven and JaCoCo
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout
+      - name: Checkout out the repository
         uses: actions/checkout@v3.3.0
       - name: Setup Java JDK on ${{ matrix.os }}
         uses: actions/setup-java@v3.10.0
@@ -27,3 +27,18 @@ jobs:
         run: mvn test jacoco:report
       - name: Generate Javadoc
         run: mvn javadoc:javadoc
+      - name: Upload the build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifact
+          path: target/
+      - name: Upload the documentation artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: documentation-artifact
+          path: target/apidocs/
+      - name: Upload the test coverage artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-coverage-artifact
+          path: target/site/jacoco/
