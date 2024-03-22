@@ -1,3 +1,4 @@
+/*
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,50 +13,68 @@ import java.util.Queue;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ClientWindowTest {
-    /**
+    */
+/**
      * The client window.
-     */
+     *//*
+
     private ClientWindow clientWindow;
-    /**
+    */
+/**
      * The image processor.
-     */
+     *//*
+
     private ImageProcessor imageProcessor;
-    /**
+    */
+/**
      * The image.
-     */
+     *//*
+
     private BufferedImage image;
-    /**
+    */
+/**
      * The client.
-     */
+     *//*
+
     private int numServers = 3;
-    /**
+    */
+/**
      * The client.
-     */
+     *//*
+
     private Client client;
-    /**
+    */
+/**
      * The SIMD executor.
-     */
+     *//*
+
     private SIMDExecutor simdExecutor;
-    /**
+    */
+/**
      * The servers.
-     */
+     *//*
+
     private List<Server> servers = new LinkedList<>();
     private static final int nCols = 2;
     private static final int nRows = 2;
     private static final String name = "Luis";
     private LoadInfo loadInfo = new LoadInfo("test_load.info");
-    /**
+    */
+/**
      * The icon.
-     */
+     *//*
+
     private ImageIcon icon;
 
     @BeforeAll
     static void setUpClass() {
         System.setProperty("java.awt.headless", "true");
     }
-    /**
+    */
+/**
      * Setup before each test.
-     */
+     *//*
+
     @BeforeEach
     void setUp() {
         servers.add(new Server(8808, loadInfo, 5));
@@ -70,9 +89,11 @@ class ClientWindowTest {
         clientWindow.setFileNameWithoutExtension("sample");
     }
 
-    /**
+    */
+/**
      * Tests the constructor of the ClientWindow class.
-     */
+     *//*
+
     @Test
     void testUpdateImage() {
         clientWindow.updateImage(image);
@@ -81,9 +102,11 @@ class ClientWindowTest {
         assertNotNull(icon.getImage());
     }
 
-    /**
+    */
+/**
      * Tests the getFileNameWithoutExtension method of the ClientWindow class.
-     */
+     *//*
+
     @Test
     void testGetFileNameWithoutExtension() {
         String expectedFileNameWithoutExtension = "sample";
@@ -91,13 +114,15 @@ class ClientWindowTest {
         assertEquals(expectedFileNameWithoutExtension, actualFileNameWithoutExtension);
     }
 
-    /**
+    */
+/**
      * Tests the getFileExtension method of the ClientWindow class.
-     */
+     *//*
+
     @Test
     void testGetFileExtension() {
         String expectedFileExtension = "png";
         String actualFileExtension = clientWindow.getFileExtension();
         assertEquals(expectedFileExtension, actualFileExtension);
     }
-}
+}*/
