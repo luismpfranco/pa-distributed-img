@@ -49,6 +49,10 @@ class ClientWindowTest {
      */
     private ImageIcon icon;
 
+    @BeforeAll
+    static void setUpClass() {
+        System.setProperty("java.awt.headless", "true");
+    }
     /**
      * Setup before each test.
      */
