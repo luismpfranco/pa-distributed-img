@@ -1,4 +1,4 @@
-name: Java CI with Maven and JaCoCo (trying again 7)
+name: Java CI with Maven and JaCoCo (trying again 8)
 
 on:
   push:
@@ -19,8 +19,6 @@ jobs:
         with:
           distribution: 'microsoft'
           java-version: '17'
-      - name: Install Xvfb
-        run: sudo apt-get install -y xvfb
       - name: Build with Maven on ${{ matrix.os }}
         run: mvn package
       - name: Run unit tests
