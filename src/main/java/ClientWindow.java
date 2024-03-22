@@ -28,11 +28,6 @@ public class ClientWindow extends JFrame {
      * The file extension.
      */
     private String fileExtension;
-
-    /**
-     * The image processor.
-     */
-    private ImageProcessor imageProcessor;
     /**
      * The icon.
      */
@@ -41,14 +36,14 @@ public class ClientWindow extends JFrame {
     /**
      * Constructs a new client window with the specified image processor, servers, client, and SIMD executor.
      *
-     * @param imageProcessor The image processor to use.
      * @param servers        The list of servers to use.
      * @param client         The client to use.
      * @param simdExecutor   The SIMD executor to use.
      */
-    public ClientWindow(ImageProcessor imageProcessor, List<Server> servers, Client client, SIMDExecutor simdExecutor) {
+    public ClientWindow( List<Server> servers, Client client, SIMDExecutor simdExecutor) {
 
-        this.imageProcessor = imageProcessor;
+        ImageProcessor imageProcessor = new ImageProcessor(servers.size(), this);
+
         JButton selectImageButton = new JButton("Select Image");
         fileChooser = new JFileChooser();
 
@@ -134,15 +129,6 @@ public class ClientWindow extends JFrame {
     public JLabel getImageLabel() {
         return imageLabel;
     }
-    /**
-     * Sets the image processor.
-     *
-     * @param imageProcessor The image processor to use.
-     */
-    public void setImageProcessor(ImageProcessor imageProcessor) {
-        this.imageProcessor = imageProcessor;
-    }
-
     /**
      * Sets the file extension.
      *

@@ -73,7 +73,7 @@ public class Main {
         panel.add(button);
 
         for (int i = 0; i < 3; i++) {
-            ClientWindow window = new ClientWindow(imageProcessor, servers, client, simdExecutor);
+            ClientWindow window = new ClientWindow(servers, client, simdExecutor);
             window.setLocation(300, 200*(i));
 
             ImageConsumerTask consumer = new ImageConsumerTask(waitingList, servers, simdExecutor, client, window.getFileNameWithoutExtension(), window.getFileExtension(), window);

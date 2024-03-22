@@ -63,14 +63,12 @@ class ClientWindowTest {
         client = new Client(name,loadInfo,nRows,nCols);
         image = ImageReader.readImage("sample.png");
         simdExecutor = new SIMDExecutor(image,nCols,nRows);
-        clientWindow = new ClientWindow(null, servers, client, simdExecutor);
+        clientWindow = new ClientWindow(servers, client, simdExecutor);
         imageProcessor = new ImageProcessor(numServers, clientWindow);
-        clientWindow.setImageProcessor(imageProcessor);
         JLabel imageLabel = new JLabel();
         clientWindow.add(imageLabel);
         clientWindow.setFileExtension("png");
         clientWindow.setFileNameWithoutExtension("sample");
-        //clientWindow.updateImage(image);
     }
 
     /**
